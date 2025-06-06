@@ -1,0 +1,49 @@
+.main {
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    background-image: url(../imagens/home_wallpaper.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.main-banner {
+    color: #fff;
+    text-align: center;
+    padding: 30% 20px 20px 20px;
+    position: relative;
+}
+
+    .main-banner button {
+        margin-top: 30px;
+        padding: 12px 30px;
+        border-radius: 25px;
+        background-color: #ffffff;
+        color: #000;
+        border: none;
+        font-weight: bold;
+    }
+
+.novidades {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 30px 20px;
+}
+
+.novidade {
+    background-color: white;
+    width: 22%;
+    min-width: 200px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    margin: 10px;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+    .novidade:hover {
+        transform: scale(1.05);
+    }

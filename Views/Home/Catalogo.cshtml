@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Catálogo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/catalogo_style.css" />
+
+<!-- CONTEÚDO -->
+<div class="conteudo">
+
+    <!-- FILTROS -->
+    <div class="filtros">
+        <h3><strong>FILTROS</strong></h3>
+
+        <div class="categorias">
+            <p><strong>Categorias</strong></p>
+            <ul>
+                <li>• Eletricidade e Iluminação</li>
+                <li>• Carroçaria</li>
+                <li>• Travões</li>
+                <li>• Filtros</li>
+                <li>• Suspensão</li>
+                <li>• Motor</li>
+                <li>• Escapamento</li>
+                <li>• Sistema de combustível</li>
+                <li>• Sistema de Refrigeração</li>
+                <li>• Sistema de transmissão</li>
+                <li>• Fluidos ou Químicos</li>
+            </ul>
+        </div>
+
+        <p><strong>Preço</strong></p>
+        <input type="range" min="1" max="1000" value="500" />
+        <p>1€ — 1000€</p>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="produtos">
+        @for (int i = 0; i < 12; i++)
+        {
+            <a class="produto" href="@Url.Action("Produto","Home")">
+                <img src="#" alt="imagem da peça" />
+                    <p><strong>Nome / Preço</strong></p>
+                </a>
+            }
+        </div>
+
+    </div>

@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Perfil";
+}
+
+<div class="container my-5">
+    <!-- Plano de fundo -->
+    <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
+
+        <div class="row">
+            <!-- Lado esquerdo: perfil -->
+            <div class="col-md-4 text-center">
+                <img src="@Model.FotoUrl" alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
+                <h5>@Model.Nome</h5>
+
+                <form asp-action="TrocarFoto" method="post" enctype="multipart/form-data" class="mb-2">
+                    <input type="file" name="NovaFoto" class="form-control" />
+                    <button type="submit" class="btn btn-outline-secondary mt-2">Trocar foto</button>
+                </form>
+
+                <form asp-action="Logout" method="post">
+                    <button class="btn btn-danger mt-2">Log out</button>
+                </form>
+            </div>
+
+            <!-- Lado direito: dados e produtos -->
+            <div class="col-md-8">
+                <h5>Nome</h5>
+                <input type="text" class="form-control rounded-pill mb-3" value="@Model.Nome" readonly />
+
+                <h5>Email</h5>
+                <input type="email" class="form-control rounded-pill mb-4" value="@Model.Email" readonly />
+
+                <h5>Produtos</h5>
+                <div class="row">
+                    @foreach (var produto in Model.Produtos)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="@produto.ImagemUrl" class="card-img-top" />
+                                <div class="card-body">
+                                    <p class="card-text">@produto.Nome</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Botão de adicionar -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 d-flex align-items-center justify-content-center">
+                            <a asp-controller="Componentes" asp-action="Publicar" class="btn btn-outline-dark fs-3">+</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
