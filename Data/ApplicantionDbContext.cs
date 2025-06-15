@@ -5,15 +5,14 @@ using System.Collections.Generic;
 
 namespace MotoPack_project.Data
 {
-    public class ApplicantionDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicantionDbContext(DbContextOptions<ApplicantionDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
         public DbSet<Registar> Registars { get; set; }
 
-
+        public DbSet<Produto> Produtos { get; set; }
     }
 }
-
