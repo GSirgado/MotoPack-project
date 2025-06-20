@@ -8,20 +8,20 @@
 
   <ItemGroup>
     <Compile Remove="Login\**" />
+    <Compile Remove="Migrations\**" />
     <Compile Remove="NovaPasta1\**" />
-    <Compile Remove="Views\NovaPasta\**" />
     <Compile Remove="wwwroot\NovaPasta1\**" />
     <Content Remove="Login\**" />
+    <Content Remove="Migrations\**" />
     <Content Remove="NovaPasta1\**" />
-    <Content Remove="Views\NovaPasta\**" />
     <Content Remove="wwwroot\NovaPasta1\**" />
     <EmbeddedResource Remove="Login\**" />
+    <EmbeddedResource Remove="Migrations\**" />
     <EmbeddedResource Remove="NovaPasta1\**" />
-    <EmbeddedResource Remove="Views\NovaPasta\**" />
     <EmbeddedResource Remove="wwwroot\NovaPasta1\**" />
     <None Remove="Login\**" />
+    <None Remove="Migrations\**" />
     <None Remove="NovaPasta1\**" />
-    <None Remove="Views\NovaPasta\**" />
     <None Remove="wwwroot\NovaPasta1\**" />
   </ItemGroup>
 
@@ -36,16 +36,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

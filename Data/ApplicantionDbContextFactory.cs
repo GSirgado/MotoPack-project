@@ -10,14 +10,14 @@ namespace MotoPack_project.Data
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())  
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Database", "MotoPack.db");
 
-            optionsBuilder.UseSqlServer(connectionString);
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

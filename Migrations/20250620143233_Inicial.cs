@@ -4,10 +4,10 @@
 
 namespace MotoPack_project.Migrations
 {
-    
-    public partial class InitialCreate : Migration
+    /// <inheritdoc />
+    public partial class Inicial : Migration
     {
-      
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -43,7 +43,7 @@ namespace MotoPack_project.Migrations
                 });
         }
 
-       
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
