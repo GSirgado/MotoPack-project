@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using MotoPack_project.Models;
 using MotoPack_project.Data;
 using System.Security.Claims;
@@ -7,6 +8,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+=======
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using MotoPack_project.Models;
+using MotoPack_project.Data;
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
 namespace MotoPack_project.Controllers
 {
@@ -20,6 +28,7 @@ namespace MotoPack_project.Controllers
         }
 
         [HttpGet]
+<<<<<<< HEAD
         [AllowAnonymous]
         public IActionResult Registar()
         {
@@ -28,6 +37,11 @@ namespace MotoPack_project.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+=======
+        public IActionResult Registar() => View();
+
+        [HttpPost]
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         public IActionResult Registar(Registar model)
         {
             if (model.Pass != model.ConfPass)
@@ -36,17 +50,24 @@ namespace MotoPack_project.Controllers
                 return View();
             }
 
+<<<<<<< HEAD
             var existe = _context.Registars.Any(u => u.Email == model.Email);
             if (existe)
+=======
+            if (_context.Registars.Any(u => u.Email == model.Email))
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             {
                 ViewBag.Erro = "Email já registado.";
                 return View();
             }
 
+<<<<<<< HEAD
             // Hash da password
             var passwordHasher = new PasswordHasher<Registar>();
             model.Pass = passwordHasher.HashPassword(model, model.Pass);
 
+=======
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             _context.Registars.Add(model);
             _context.SaveChanges();
 
@@ -54,6 +75,7 @@ namespace MotoPack_project.Controllers
         }
 
         [HttpGet]
+<<<<<<< HEAD
         [AllowAnonymous]
         public IActionResult Login()
         {
@@ -105,13 +127,48 @@ namespace MotoPack_project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+=======
+        public IActionResult Login() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Login(Registar model)
+        {
+            var user = _context.Registars.FirstOrDefault(u => u.Email == model.Email && u.Pass == model.Pass);
+            if (user == null)
+            {
+                ViewBag.Erro = "Email ou palavra-passe inválidos.";
+                return View();
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Nome),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("IsAdmin", user.IsAdmin.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
 
+<<<<<<< HEAD
         [Authorize]
+=======
+        [HttpGet]
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         public IActionResult Perfil()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -120,10 +177,14 @@ namespace MotoPack_project.Controllers
             var user = _context.Registars.Find(int.Parse(userId));
             if (user == null) return RedirectToAction("Login");
 
+<<<<<<< HEAD
             var produtos = _context.Produtos
                 .Where(p => p.UtilizadorId == user.Id)
                 .ToList();
 
+=======
+            var produtos = _context.Produtos.Where(p => p.UtilizadorId == user.Id).ToList();
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             ViewBag.Produtos = produtos;
 
             return View(user);

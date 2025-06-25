@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MotoPack_project.Data;
 
@@ -10,14 +11,14 @@ using MotoPack_project.Data;
 namespace MotoPack_project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250625133908_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
-<<<<<<< HEAD
-=======
 
             modelBuilder.Entity("MotoPack_project.Models.ImagemProduto", b =>
                 {
@@ -38,7 +39,6 @@ namespace MotoPack_project.Migrations
 
                     b.ToTable("ImagensProduto");
                 });
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
@@ -58,10 +58,6 @@ namespace MotoPack_project.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
-<<<<<<< HEAD
-                        .IsRequired()
-=======
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -71,11 +67,7 @@ namespace MotoPack_project.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("TEXT");
 
-<<<<<<< HEAD
-                    b.Property<int?>("UtilizadorId")
-=======
                     b.Property<int>("UtilizadorId")
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -90,6 +82,10 @@ namespace MotoPack_project.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConfPass")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -137,8 +133,6 @@ namespace MotoPack_project.Migrations
                     b.ToTable("Suportes");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("MotoPack_project.Models.ImagemProduto", b =>
                 {
                     b.HasOne("MotoPack_project.Models.Produto", "Produto")
@@ -150,30 +144,22 @@ namespace MotoPack_project.Migrations
                     b.Navigation("Produto");
                 });
 
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
                     b.HasOne("MotoPack_project.Models.Registar", "Utilizador")
                         .WithMany("Produtos")
                         .HasForeignKey("UtilizadorId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade);
-=======
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
                     b.Navigation("Utilizador");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
                     b.Navigation("ImagensProduto");
                 });
 
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             modelBuilder.Entity("MotoPack_project.Models.Registar", b =>
                 {
                     b.Navigation("Produtos");

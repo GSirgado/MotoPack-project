@@ -1,0 +1,55 @@
+﻿@model MotoPack_project.Models.Produto
+
+@{
+    ViewData["Title"] = "Produto";
+}
+
+<main class="container mt-5">
+
+    <h2 class="text-center mb-4">@Model.Nome</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="p-4 bg-light rounded mb-3">
+                <h5><strong>Descrição do produto</strong></h5>
+                <p>@Model.Descricao</p>
+            </div>
+
+            <div class="p-4 bg-light rounded">
+                <p><strong>Categoria:</strong> @Model.Categoria</p>
+                <p><strong>Data de publicação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Postado por:</strong> @Model.Utilizador?.Nome</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <div class="position-relative">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" style="max-height:250px; margin:5px;" class="img-fluid rounded" />
+                }
+                else
+                {
+                    <p><em>Sem imagem disponível</em></p>
+                }
+
+
+            </div>
+
+            <div class="mt-4 d-flex align-items-center justify-content-between">
+                <span class="fw-bold fs-5">Preço: @Model.Preco.ToString("0.00") €</span>
+
+                <form asp-controller="Carrinho" asp-action="AdicionarAoCarrinho" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button class="btn btn-success px-4">Adicionar ao carrinho</button>
+                </form>
+            </div>
+
+            <div class="mt-3 text-end">
+                <a asp-controller="Carrinho" asp-action="Index" class="btn btn-outline-primary">
+                    Ver Carrinho
+                </a>
+            </div>
+        </div>
+    </div>
+</main>

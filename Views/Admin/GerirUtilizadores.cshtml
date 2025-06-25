@@ -45,11 +45,26 @@
                                 <td>@produto.Preco.ToString("C")</td>
                                 <td>@produto.Descricao</td>
                                 <td>
+<<<<<<< HEAD
                                     <a asp-action="EditarProduto" asp-controller="Home" asp-route-id="@produto.Id" class="btn btn-sm btn-primary me-2">Editar</a>
                                     <form asp-action="ApagarProduto" asp-controller="Home" asp-route-id="@produto.Id" method="post" style="display:inline;">
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem a certeza que deseja apagar este produto?');">Apagar</button>
                                     </form>
                                 </td>
+=======
+                                    <a asp-action="EditarProduto" asp-controller="Produto" asp-route-id="@produto.Id" class="btn btn-sm btn-primary me-2">
+                                        Editar
+                                    </a>
+
+                                    <form asp-action="ApagarProduto" asp-controller="Produto" asp-route-id="@produto.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Tem a certeza que deseja apagar este produto?');">
+                                            Apagar
+                                        </button>
+                                    </form>
+                                </td>
+
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
                             </tr>
                         }
                     </tbody>
@@ -61,4 +76,8 @@
             }
         </div>
     </div>
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97

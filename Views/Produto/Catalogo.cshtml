@@ -1,0 +1,168 @@
+﻿@model IEnumerable<MotoPack_project.Models.Produto>
+
+@{
+    ViewData["Title"] = "Catálogo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var precoMin = ViewBag.PrecoMin ?? 0;
+    var precoMax = ViewBag.PrecoMax ?? 1000;
+    var precoAtual = ViewBag.PrecoSelecionado ?? precoMax;
+    var categoriaAtual = ViewBag.CategoriaAtual as string ?? "";
+}
+<style>
+    .conteudo {
+        display: flex;
+        gap: 20px;
+    }
+
+    .filtros {
+        width: 220px;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 8px;
+        height: fit-content;
+    }
+
+    .produtos {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .produto {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: white;
+        height: 320px;
+    }
+
+        .produto img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+    .descricao {
+        color: black;
+        font-size: 14px;
+        text-align: center;
+        max-height: 3.6em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .filtros h3 {
+        margin-bottom: 1rem;
+    }
+
+    .filtros a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+        .filtros a:hover {
+            text-decoration: underline;
+        }
+
+    .slider-value {
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    .filtros form button {
+        margin-top: 10px;
+    }
+
+    .filtros .repor {
+        margin-top: 15px;
+        display: block;
+    }
+</style>
+
+<a href="@Url.Action("AdicionarProduto", "Home")" class="btn btn-primary mb-3">Adicionar Novo Produto</a>
+
+<div class="conteudo">
+    <div class="filtros">
+        <h3><strong>FILTROS</strong></h3>
+
+        <div class="categorias">
+            <p><strong>Categorias</strong></p>
+            <ul>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Eletricidade e Iluminação" })">Eletricidade e Iluminação</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Carroçaria" })">Carroçaria</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Travões" })">Travões</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Filtros" })">Filtros</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Suspensão" })">Suspensão</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Motor" })">Motor</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Escapamento" })">Escapamento</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de combustível" })">Sistema de combustível</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de Refrigeração" })">Sistema de Refrigeração</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de transmissão" })">Sistema de transmissão</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Fluidos ou Químicos" })">Fluidos ou Químicos</a></li>
+                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Rodas" })">Rodas</a></li>
+            </ul>
+        </div>
+
+        <form method="get" asp-action="Catalogo">
+            @if (!string.IsNullOrEmpty(categoriaAtual))
+            {
+                <input type="hidden" name="categoria" value="@categoriaAtual" />
+            }
+
+            <<label><strong>Preço até:</strong></label><br />
+            <input type="range" id="priceRange" name="precoMax"
+                   min="@precoMin" max="@precoMax" value="@precoAtual" />
+            <p class="slider-value">Selecionado: <span id="priceValue">@precoAtual</span>€</p>
+
+            <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
+        </form>
+
+        <a href="@Url.Action("Catalogo", "Home")" class="btn btn-sm btn-secondary repor">Repor Filtros</a>
+    </div>
+
+    <div class="produtos">
+        @if (!string.IsNullOrEmpty(ViewBag.CategoriaAtual as string))
+        {
+            <h4>Filtrando por: <em>@ViewBag.CategoriaAtual</em></h4>
+        }
+
+        @if (!Model.Any())
+        {
+            <p>Nenhum produto encontrado com os filtros atuais.</p>
+        }
+        else
+        {
+            @foreach (var produto in Model)
+            {
+                <div class="produto">
+                    <a href="@Url.Action("Produto", "Home", new { id = produto.Id })">
+                        <img src="@produto.ImageUrl" alt="imagem da peça" />
+                        <p><strong>@produto.Nome / @produto.Preco.ToString("0.00") €</strong></p>
+                    </a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<script>
+    const priceSlider = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+
+    if (priceSlider && priceValue) {
+        priceSlider.addEventListener('input', function () {
+            priceValue.textContent = this.value;
+        });
+    }
+</script>

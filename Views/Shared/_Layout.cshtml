@@ -23,16 +23,20 @@
             </div>
 
             <div class="d-flex align-items-center gap-3">
+<<<<<<< HEAD
                 <a href="@Url.Action("Catalogo","ListaProd")">
                     <button class="btn btn-light">🛒</button>
                 </a>
+=======
+                <a href="@Url.Action("Catalogo","Produto")" class="btn btn-light">🛒</a>
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
                     <a href="@Url.Action("Perfil", "Conta")">
                         <img src="/imagens/perfil_default.png" height="50" />
                     </a>
-                    <form method="post" asp-action="Logout" asp-controller="Home" class="d-inline">
+                    <form method="post" asp-action="Logout" asp-controller="Conta" class="d-inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                     </form>
@@ -48,9 +52,15 @@
         </div>
 
         <div class="d-flex justify-content-center gap-4 py-1">
+<<<<<<< HEAD
             <a href="@Url.Action("Catalogo","ListaProd")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
             <a href="@Url.Action("Categorias","ListaProd")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
             <a href="@Url.Action("Suporte","Home")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
+=======
+            <a href="@Url.Action("Catalogo","Produto")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
+            <a href="@Url.Action("Categorias","Produto")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
+            <a href="@Url.Action("Suporte","Suporte")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         </div>
     </header>
 
@@ -63,6 +73,10 @@
         <div>|</div>
         <div>Formas de contato</div>
     </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using MotoPack_project.Models;
 using MotoPack_project.Data;
 using System.Security.Claims;
@@ -6,22 +7,18 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+=======
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
 namespace MotoPack_project.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public HomeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
+<<<<<<< HEAD
 
         [HttpGet]
         [HttpGet]
@@ -128,5 +125,7 @@ namespace MotoPack_project.Controllers
 
             return RedirectToAction("Perfil");
         }
+=======
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
     }
 }

@@ -14,7 +14,59 @@
             <div class="col-md-4 text-center">
                 <img src="@Url.Content("~/imagens/default-profile.png")" alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
                 <h5>@Model.Nome</h5>
+<<<<<<< HEAD
             </div>
         </div>
     </div>
 </div>
+=======
+
+                <form method="post" enctype="multipart/form-data" class="mb-2">
+                    <input type="file" name="NovaFoto" class="form-control" />
+                    <button type="submit" class="btn btn-outline-secondary mt-2">Trocar foto</button>
+                </form>
+
+                <form asp-controller="Home" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-danger mt-2">Log out</button>
+                </form>
+            </div>
+
+            <div class="col-md-8">
+                <h5>Nome</h5>
+                <input type="text" class="form-control rounded-pill mb-3" value="@Model.Nome" readonly />
+
+                <h5>Email</h5>
+                <input type="email" class="form-control rounded-pill mb-4" value="@Model.Email" readonly />
+
+                <h5>Produtos</h5>
+                <div class="row">
+                    @foreach (var produto in (List<MotoPack_project.Models.Produto>)ViewBag.Produtos)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <a class="card h-100" href="@Url.Action("Produto", "Conta", new { id = produto.Id })">
+                                <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" />
+
+                                <div class="card-body">
+                                    <h5 class="card-title">@produto.Nome</h5>
+                                    <p class="card-text">@produto.Preco.ToString("0.00") €</p>
+                                    <p class="card-text text-muted">@produto.Categoria</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
+
+                    <!-- Botão para adicionar novo produto -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 d-flex align-items-center justify-content-center">
+                            <a href="@Url.Action("AdicionarProduto", "Produto")" class="btn btn-outline-dark fs-3">+</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97

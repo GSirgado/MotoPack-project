@@ -1,0 +1,44 @@
+﻿@model MotoPack_project.Models.Suporte
+
+@{
+    ViewData["Title"] = "Pedido de Ajuda";
+}
+
+<main class="container mt-5">
+    <div class="text-center mb-4">
+        <h3 class="bg-light d-inline-block px-4 py-2 rounded-pill fw-bold">Pedido de ajuda</h3>
+        
+        @if (TempData["SuporteSucesso"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuporteSucesso"]
+            </div>
+        }
+
+    </div>
+
+    <form asp-action="EnviarPedido" method="post" class="w-75 mx-auto">
+        <div class="mb-3">
+            <label asp-for="Nome" class="form-label">Nome:</label>
+            <input asp-for="Nome" class="form-control rounded-pill px-3" readonly="@(!string.IsNullOrEmpty(Model.Nome))" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email:</label>
+            <input asp-for="Email" class="form-control rounded-pill px-3" readonly="@(!string.IsNullOrEmpty(Model.Email))" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Mensagem" class="form-label fw-bold">Descreva o seu pedido de ajuda</label>
+            <textarea asp-for="Mensagem" class="form-control rounded p-3" rows="5"></textarea>
+            <span asp-validation-for="Mensagem" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+            <a asp-action="Index" class="btn btn-danger px-4">Voltar</a>
+            <button type="submit" class="btn btn-success px-4">Enviar</button>
+        </div>
+    </form>
+</main>
