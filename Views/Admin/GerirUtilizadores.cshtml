@@ -1,0 +1,71 @@
+﻿@model List<MotoPack_project.Models.Registar>
+
+@{
+    ViewData["Title"] = "Gerir Utilizadores";
+}
+
+<h2 class="mb-4">Gerir Utilizadores</h2>
+
+@foreach (var user in Model)
+{
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">@user.Nome (@user.Email)</h5>
+        </div>
+        <div class="card-body">
+            @if (user.Produtos != null && user.Produtos.Any())
+            {
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Imagem</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Descrição</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var produto in user.Produtos)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(produto.ImageUrl))
+                                    {
+                                        <img src="@produto.ImageUrl" alt="Imagem" style="max-width: 100px; max-height: 100px;" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sem imagem</span>
+                                    }
+                                </td>
+                                <td>@produto.Nome</td>
+                                <td>@produto.Categoria</td>
+                                <td>@produto.Preco.ToString("C")</td>
+                                <td>@produto.Descricao</td>
+                                <td>
+                                    <a asp-action="EditarProduto" asp-controller="Produto" asp-route-id="@produto.Id" class="btn btn-sm btn-primary me-2">
+                                        Editar
+                                    </a>
+
+                                    <form asp-action="ApagarProduto" asp-controller="Produto" asp-route-id="@produto.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Tem a certeza que deseja apagar este produto?');">
+                                            Apagar
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">Este utilizador não tem produtos.</p>
+            }
+        </div>
+    </div>
+}

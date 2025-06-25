@@ -1,0 +1,26 @@
+﻿@model MotoPack_project.Models.Registar
+
+@{
+    ViewData["Title"] = "Editar Utilizador";
+}
+
+<h2>Editar Utilizador</h2>
+
+<form asp-action="EditarUtilizador" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Nome" class="form-label">Nome</label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+    <a asp-action="GerirUtilizadores" class="btn btn-secondary">Cancelar</a>
+</form>

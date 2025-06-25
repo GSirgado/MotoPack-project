@@ -21,8 +21,10 @@
     @foreach (var categoria in categorias)
     {
         <div class="item">
-            <div class="imagem">imagem</div>
-            <div class="descricao">@categoria</div>
+            <a href="@Url.Action("Catalogo", "Produto", new { categoria = categoria })" class="link-sem-estilo">
+                <div class="imagem">imagem</div>
+                <div class="descricao">@categoria</div>
+            </a>
         </div>
     }
 </div>

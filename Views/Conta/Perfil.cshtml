@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Perfil do Utilizador";
 }
+@if (User.HasClaim("IsAdmin", "True"))
+{
+    <a href="@Url.Action("GerirUtilizadores", "Admin")" class="btn btn-warning mt-3">Gerir Utilizadores</a>
+}
 
 <div class="container my-5">
     <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
@@ -31,14 +35,30 @@
 
                 <h5>Produtos</h5>
                 <div class="row">
-                    <p>arroz</p>
+                    @foreach (var produto in (List<MotoPack_project.Models.Produto>)ViewBag.Produtos)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <a class="card h-100" href="@Url.Action("Produto", "Conta", new { id = produto.Id })">
+                                <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" />
 
+                                <div class="card-body">
+                                    <h5 class="card-title">@produto.Nome</h5>
+                                    <p class="card-text">@produto.Preco.ToString("0.00") €</p>
+                                    <p class="card-text text-muted">@produto.Categoria</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
+
+                    <!-- Botão para adicionar novo produto -->
                     <div class="col-md-4 mb-3">
                         <div class="card h-100 d-flex align-items-center justify-content-center">
-                            <a class="btn btn-outline-dark fs-3">+</a>
+                            <a href="@Url.Action("AdicionarProduto", "Produto")" class="btn btn-outline-dark fs-3">+</a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

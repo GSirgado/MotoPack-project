@@ -23,24 +23,22 @@
             </div>
 
             <div class="d-flex align-items-center gap-3">
-                <a href="@Url.Action("Catalogo","Home")">
-                    <button class="btn btn-light">🛒</button>
-                </a>
+                <a href="@Url.Action("Catalogo","Produto")" class="btn btn-light">🛒</a>
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    <a href="@Url.Action("Perfil", "Home")">
+                    <a href="@Url.Action("Perfil", "Conta")">
                         <img src="/imagens/perfil_default.png" height="50" />
                     </a>
-                    <form method="post" asp-action="Logout" asp-controller="Home" class="d-inline">
+                    <form method="post" asp-action="Logout" asp-controller="Conta" class="d-inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                     </form>
                 }
                 else
                 {
-                    <a href="@Url.Action("Login","Home")" class="btn btn-outline-light btn-sm">Login</a>
-                    <a href="@Url.Action("Registar","Home")">
+                    <a href="@Url.Action("Login","Conta")" class="btn btn-outline-light btn-sm">Login</a>
+                    <a href="@Url.Action("Registar","Conta")">
                         <img src="/imagens/perfil_default.png" height="50" />
                     </a>
                 }
@@ -48,9 +46,9 @@
         </div>
 
         <div class="d-flex justify-content-center gap-4 py-1">
-            <a href="@Url.Action("Catalogo","Home")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
-            <a href="@Url.Action("Categorias","Home")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
-            <a href="@Url.Action("Suporte","Home")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
+            <a href="@Url.Action("Catalogo","Produto")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
+            <a href="@Url.Action("Categorias","Produto")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
+            <a href="@Url.Action("Suporte","Suporte")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
         </div>
     </header>
 
@@ -63,6 +61,10 @@
         <div>|</div>
         <div>Formas de contato</div>
     </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

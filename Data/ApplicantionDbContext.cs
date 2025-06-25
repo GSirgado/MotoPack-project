@@ -1,18 +1,26 @@
-﻿using MotoPack_project.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using MotoPack_project.Models;
 
 namespace MotoPack_project.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options) { }
 
         public DbSet<Registar> Registars { get; set; }
-
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Suporte> Suportes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configurar relação entre Produto e Registar
+            modelBuilder.Entity<Produto>()
+                .HasOne(p => p.Utilizador)
+                .WithMany(u => u.Produtos)
+                .HasForeignKey(p => p.UtilizadorId);
+        }
     }
 }
