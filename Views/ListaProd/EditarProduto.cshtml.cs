@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MotoPack_project.Views.Home
+namespace MotoPack_project.Views.ListaProd
 {
-    public class LoginModel : PageModel
+    public class EditarProdutoModel : PageModel
     {
         public void OnGet()
         {

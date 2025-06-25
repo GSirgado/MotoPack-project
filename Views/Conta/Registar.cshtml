@@ -102,7 +102,7 @@
     <div class="divider"></div>
 
     <div class="form-section">
-        <form method="post" asp-controller="Home" asp-action="Registar">
+        <form method="post" asp-controller="Conta" asp-action="Registar">
             @Html.AntiForgeryToken()
 
             @if (ViewBag.Erro != null)
@@ -120,7 +120,7 @@
                 <input type="reset" class="reset-btn" value="Apagar" />
             </div>
 
-            <button type="button" class="login-btn" onclick="location.href='@Url.Action("Login", "Home")'">
+            <button type="button" class="login-btn" onclick="location.href='@Url.Action("Login", "Conta")'">
                 Já tenho conta!
             </button>
         </form>

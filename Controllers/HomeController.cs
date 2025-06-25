@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace MotoPack_project.Controllers
 {
@@ -23,115 +24,109 @@ namespace MotoPack_project.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Registar()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult Registar(Registar model)
-        {
-            if (model.Pass != model.ConfPass)
-            {
-                ViewBag.Erro = "As palavras-passe não coincidem.";
-                return View();
-            }
-
-            var existe = _context.Registars.Any(u => u.Email == model.Email);
-            if (existe)
-            {
-                ViewBag.Erro = "Email já registado.";
-                return View();
-            }
-
-            _context.Registars.Add(model);
-            _context.SaveChanges();
-
-            return RedirectToAction("Login");
-        }
-
         [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Suporte()
         {
-            return View();
-        }
+            var suporte = new Suporte();
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(Registar model)
-        {
-            var user = _context.Registars
-                .FirstOrDefault(u => u.Email == model.Email && u.Pass == model.Pass);
-
-            if (user != null)
+            if (User.Identity.IsAuthenticated)
             {
-                var claims = new List<Claim>
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _context.Registars.FirstOrDefault(u => u.Id == int.Parse(userId));
+
+                if (user != null)
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Nome),
-                    new Claim(ClaimTypes.Email, user.Email)
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-                };
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal,
-                    authProperties
-                );
-
-                return RedirectToAction("Perfil");
+                    suporte.Nome = user.Nome;
+                    suporte.Email = user.Email;
+                }
             }
 
-            ViewBag.Erro = "Email ou palavra-passe inválidos.";
-            return View();
+            return View(suporte);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public IActionResult EnviarPedido(Suporte model)
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            Console.WriteLine(">>> EnviarPedido CHAMADO");
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Erro em {entry.Key}: {error.ErrorMessage}");
+                    }
+                }
+
+                return View("Suporte", model);
+            }
+
+            try
+            {
+                model.DataHora = DateTime.Now;
+
+                _context.Suportes.Add(model);
+                _context.SaveChanges();
+
+                Console.WriteLine(">>> Pedido guardado com sucesso!");
+
+                TempData["SuporteSucesso"] = "Pedido de ajuda enviado com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(">>> ERRO ao guardar o pedido de suporte: " + ex.Message);
+                TempData["SuporteSucesso"] = "Ocorreu um erro ao enviar o pedido.";
+                return View("Suporte", model);
+            }
+
+            return RedirectToAction("Suporte");
         }
 
+
+
+        [HttpGet]
         [Authorize]
-        public IActionResult Perfil()
+        public IActionResult AdicionarProduto()
         {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdicionarProduto(Produto produto)
+        {
+            if (!ModelState.IsValid) return View(produto);
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return RedirectToAction("Login");
 
-            var user = _context.Registars.Find(int.Parse(userId));
-            if (user == null) return RedirectToAction("Login");
+            produto.UtilizadorId = int.Parse(userId);
+            produto.DataCriacao = DateTime.Now;
 
-            return View(user);
+            if (produto.Imagem != null && produto.Imagem.Length > 0)
+            {
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                Directory.CreateDirectory(uploads);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(produto.Imagem.FileName);
+                var filePath = Path.Combine(uploads, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await produto.Imagem.CopyToAsync(stream);
+                }
+
+                produto.ImageUrl = "/uploads/" + fileName;
+            }
+
+            _context.Produtos.Add(produto);
+            _context.SaveChanges();
+
+            return RedirectToAction("Perfil");
         }
-
-        public IActionResult Catalogo()
-        {
-            var produtos = _context.Produtos.ToList();
-            return View(produtos);
-        }
-
-        public IActionResult Categorias()
-        {
-            return View();
-        }
-
-        public IActionResult Suporte()
-        {
-            return View();
-        }
-
     }
 }

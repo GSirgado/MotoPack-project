@@ -1,0 +1,20 @@
+﻿@model MotoPack_project.Models.Registar
+
+@{
+    ViewData["Title"] = "Perfil do Utilizador";
+}
+@if (User.HasClaim("IsAdmin", "True"))
+{
+    <a href="@Url.Action("GerirUtilizadores", "Admin")" class="btn btn-warning mt-3">Gerir Utilizadores</a>
+}
+
+<div class="container my-5">
+    <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="@Url.Content("~/imagens/default-profile.png")" alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
+                <h5>@Model.Nome</h5>
+            </div>
+        </div>
+    </div>
+</div>

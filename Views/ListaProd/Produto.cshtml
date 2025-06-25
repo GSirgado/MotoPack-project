@@ -10,9 +10,16 @@
 
     <div class="row">
         <div class="col-md-6">
+            <div class="p-4 bg-light rounded mb-3">
+                <h5><strong>Descrição do produto</strong></h5>
+                <p>@Model.Descricao</p>
+            </div>
+
             <div class="p-4 bg-light rounded">
-                <h5>Descrição do produto</h5>
-                <p>@Model.Categoria</p>
+                <p><strong>Categoria:</strong> @Model.Categoria</p>
+                <p><strong>Data de publicação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Postado por:</strong> @Model.Utilizador?.Nome</p>
+
             </div>
         </div>
 
@@ -23,6 +30,7 @@
 
             <div class="mt-4 d-flex align-items-center justify-content-between">
                 <span class="fw-bold fs-5">Preço: @Model.Preco.ToString("0.00") €</span>
+
                 <form asp-action="AdicionarAoCarrinho" method="post">
                     <input type="hidden" name="id" value="@Model.Id" />
                     <button class="btn btn-success px-4">Adicionar ao carrinho</button>
