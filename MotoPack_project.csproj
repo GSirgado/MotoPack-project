@@ -8,20 +8,36 @@
 
   <ItemGroup>
     <Compile Remove="Login\**" />
+    <Compile Remove="Migrations\**" />
     <Compile Remove="NovaPasta1\**" />
+<<<<<<< HEAD
     <Compile Remove="Views\Home\NovaPasta\**" />
+=======
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
     <Compile Remove="wwwroot\NovaPasta1\**" />
     <Content Remove="Login\**" />
+    <Content Remove="Migrations\**" />
     <Content Remove="NovaPasta1\**" />
+<<<<<<< HEAD
     <Content Remove="Views\Home\NovaPasta\**" />
+=======
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
     <Content Remove="wwwroot\NovaPasta1\**" />
     <EmbeddedResource Remove="Login\**" />
+    <EmbeddedResource Remove="Migrations\**" />
     <EmbeddedResource Remove="NovaPasta1\**" />
+<<<<<<< HEAD
     <EmbeddedResource Remove="Views\Home\NovaPasta\**" />
+=======
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
     <EmbeddedResource Remove="wwwroot\NovaPasta1\**" />
     <None Remove="Login\**" />
+    <None Remove="Migrations\**" />
     <None Remove="NovaPasta1\**" />
+<<<<<<< HEAD
     <None Remove="Views\Home\NovaPasta\**" />
+=======
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
     <None Remove="wwwroot\NovaPasta1\**" />
   </ItemGroup>
 
@@ -36,14 +52,23 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.6" />
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
+=======
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
+>>>>>>> 42004b439946ff58f9fe1d645b35c653ec6c69ed
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
