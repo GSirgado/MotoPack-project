@@ -16,21 +16,24 @@ namespace MotoPack_project.Controllers
             _context = context;
         }
 
-        // Novo nome da action: ConversasRecentes
         public IActionResult ConversasRecentes()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            // Buscar conversas onde o utilizador é remetente ou destinatário
+            // Incluir mensagens corretamente (sem o OrderBy dentro do Include)
             var conversas = _context.Chats
-                .Include(c => c.Mensagens.OrderByDescending(m => m.DataEnvio).Take(1))
+                .Include(c => c.Mensagens)
                 .Include(c => c.Remetente)
                 .Include(c => c.Destinatario)
                 .Where(c => c.RemetenteId == userId || c.DestinatarioId == userId)
-                .OrderByDescending(c => c.Mensagens.Max(m => m.DataEnvio))
                 .ToList();
 
-            return View(conversas); // View deve ser ConversasRecentes.cshtml
+            // Ordenar em memória com base na última mensagem (evita erro com LINQ to Entities)
+            conversas = conversas
+                .OrderByDescending(c => c.Mensagens.Any() ? c.Mensagens.Max(m => m.DataEnvio) : DateTime.MinValue)
+                .ToList();
+
+            return View("ConversasRecentes", conversas); // Garante que está a ir para a view correta
         }
 
         public IActionResult Conversa(int destinatarioId)
@@ -44,13 +47,16 @@ namespace MotoPack_project.Controllers
             if (destinatario == null)
                 return NotFound();
 
-            var mensagens = _context.Mensagens
-                .Include(m => m.Chat)
-                .Where(m =>
-                    (m.RemetenteId == remetenteId && m.Chat.DestinatarioId == destinatarioId) ||
-                    (m.RemetenteId == destinatarioId && m.Chat.RemetenteId == remetenteId))
+            // Recuperar chat existente (qualquer direção)
+            var chat = _context.Chats
+                .Include(c => c.Mensagens)
+                .FirstOrDefault(c =>
+                    (c.RemetenteId == remetenteId && c.DestinatarioId == destinatarioId) ||
+                    (c.RemetenteId == destinatarioId && c.DestinatarioId == remetenteId));
+
+            var mensagens = chat?.Mensagens
                 .OrderBy(m => m.DataEnvio)
-                .ToList();
+                .ToList() ?? new List<Models.Mensagem>();
 
             ViewBag.DestinatarioId = destinatarioId;
             ViewBag.DestinatarioNome = destinatario.Nome;

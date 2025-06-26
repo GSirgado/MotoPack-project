@@ -39,7 +39,8 @@
                     @foreach (var produto in (List<MotoPack_project.Models.Produto>)ViewBag.Produtos)
                     {
                         <div class="col-md-4 mb-3">
-                            <a class="card h-100" href="@Url.Action("Produto", "Conta", new { id = produto.Id })">
+                            <a class="card h-100" href="@Url.Action("Produto", "Produto", new { id = produto.Id })
+    ">
                                 <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" />
                                 <div class="card-body">
                                     <h5 class="card-title">@produto.Nome</h5>
