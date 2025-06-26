@@ -1,0 +1,26 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Conversa com " + ViewBag.DestinatarioNome;
+    var mensagens = ViewBag.Mensagens as List<MotoPack_project.Models.Mensagem>;
+    var currentUserId = int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier));
+}
+
+<h2>Conversa com @ViewBag.DestinatarioNome</h2>
+
+<div>
+    @foreach (var msg in mensagens)
+    {
+        <div style="@(msg.RemetenteId == currentUserId ? "text-align: right;" : "text-align: left;")">
+            <p><strong>@(msg.RemetenteId == currentUserId ? "Você" : ViewBag.DestinatarioNome):</strong> @msg.Texto</p>
+            <small>@msg.DataEnvio.ToString("g")</small>
+        </div>
+    }
+</div>
+
+<form asp-action="EnviarMensagem" method="post">
+    <input type="hidden" name="destinatarioId" value="@ViewBag.DestinatarioId" />
+    <textarea name="texto" required class="form-control" rows="3"></textarea>
+    <br />
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>

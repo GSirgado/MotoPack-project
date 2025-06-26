@@ -21,11 +21,7 @@
     @foreach (var categoria in categorias)
     {
         <div class="item">
-<<<<<<<< HEAD:Views/ListaProd/Categorias.cshtml
-            <a href="@Url.Action("Catalogo", "ListaProd", new { categoria = categoria })" class="link-sem-estilo">
-========
             <a href="@Url.Action("Catalogo", "Produto", new { categoria = categoria })" class="link-sem-estilo">
->>>>>>>> de178ab14944c736a2c455ac24c31151131d2a97:Views/Produto/Categorias.cshtml
                 <div class="imagem">imagem</div>
                 <div class="descricao">@categoria</div>
             </a>

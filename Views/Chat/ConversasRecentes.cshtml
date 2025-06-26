@@ -1,0 +1,43 @@
+﻿@model List<MotoPack_project.Models.Chat>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Conversas Recentes";
+    var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+}
+
+<h2 class="mb-4">Conversas Recentes</h2>
+
+@if (Model.Any())
+{
+    <ul class="list-group">
+        @foreach (var chat in Model)
+        {
+            var outroUtilizador = chat.RemetenteId == currentUserId ? chat.Destinatario : chat.Remetente;
+            var ultimaMensagem = chat.Mensagens
+            .OrderByDescending(m => m.DataEnvio)
+            .FirstOrDefault();
+
+            <li class="list-group-item">
+                <a asp-action="Conversa" asp-route-destinatarioId="@outroUtilizador.Id" class="text-decoration-none text-dark">
+                    <strong>@outroUtilizador.Nome</strong><br />
+                    <small class="text-muted">
+                        @if (ultimaMensagem != null)
+                        {
+                            @ultimaMensagem.Texto
+                            @ultimaMensagem.DataEnvio.ToString("g")
+                       }
+                        else
+                        {
+                            <em>Sem mensagens ainda</em>
+                        }
+                    </small>
+                </a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Você ainda não tem conversas iniciadas.</p>
+}

@@ -7,7 +7,7 @@ using MotoPack_project.Data;
 
 #nullable disable
 
-namespace MotoPack_project.Migrations
+namespace MotoPack_project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -16,29 +16,55 @@ namespace MotoPack_project.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
-<<<<<<< HEAD
-=======
 
-            modelBuilder.Entity("MotoPack_project.Models.ImagemProduto", b =>
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProdutoId")
+                    b.Property<int>("DestinatarioId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Url")
+                    b.Property<int>("RemetenteId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinatarioId");
+
+                    b.HasIndex("RemetenteId");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("MotoPack_project.Models.Mensagem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DataEnvio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RemetenteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Texto")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("ChatId");
 
-                    b.ToTable("ImagensProduto");
+                    b.HasIndex("RemetenteId");
+
+                    b.ToTable("Mensagens");
                 });
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
@@ -54,14 +80,9 @@ namespace MotoPack_project.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
-<<<<<<< HEAD
-                        .IsRequired()
-=======
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -71,11 +92,7 @@ namespace MotoPack_project.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("TEXT");
 
-<<<<<<< HEAD
-                    b.Property<int?>("UtilizadorId")
-=======
                     b.Property<int>("UtilizadorId")
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -126,6 +143,7 @@ namespace MotoPack_project.Migrations
 
                     b.Property<string>("Mensagem")
                         .IsRequired()
+                        .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -137,43 +155,60 @@ namespace MotoPack_project.Migrations
                     b.ToTable("Suportes");
                 });
 
-<<<<<<< HEAD
-=======
-            modelBuilder.Entity("MotoPack_project.Models.ImagemProduto", b =>
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
                 {
-                    b.HasOne("MotoPack_project.Models.Produto", "Produto")
-                        .WithMany("ImagensProduto")
-                        .HasForeignKey("ProdutoId")
+                    b.HasOne("MotoPack_project.Models.Registar", "Destinatario")
+                        .WithMany()
+                        .HasForeignKey("DestinatarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Produto");
+                    b.HasOne("MotoPack_project.Models.Registar", "Remetente")
+                        .WithMany()
+                        .HasForeignKey("RemetenteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destinatario");
+
+                    b.Navigation("Remetente");
                 });
 
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
+            modelBuilder.Entity("MotoPack_project.Models.Mensagem", b =>
+                {
+                    b.HasOne("MotoPack_project.Models.Chat", "Chat")
+                        .WithMany("Mensagens")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MotoPack_project.Models.Registar", "Remetente")
+                        .WithMany()
+                        .HasForeignKey("RemetenteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Remetente");
+                });
+
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
                     b.HasOne("MotoPack_project.Models.Registar", "Utilizador")
                         .WithMany("Produtos")
                         .HasForeignKey("UtilizadorId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade);
-=======
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
 
                     b.Navigation("Utilizador");
                 });
 
-<<<<<<< HEAD
-=======
-            modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
                 {
-                    b.Navigation("ImagensProduto");
+                    b.Navigation("Mensagens");
                 });
 
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
             modelBuilder.Entity("MotoPack_project.Models.Registar", b =>
                 {
                     b.Navigation("Produtos");

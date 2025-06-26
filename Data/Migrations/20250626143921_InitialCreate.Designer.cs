@@ -8,17 +8,66 @@ using MotoPack_project.Data;
 
 #nullable disable
 
-namespace MotoPack_project.Migrations
+namespace MotoPack_project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250625185536_AtualizaRegistar")]
-    partial class AtualizaRegistar
+    [Migration("20250626143921_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DestinatarioId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RemetenteId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinatarioId");
+
+                    b.HasIndex("RemetenteId");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("MotoPack_project.Models.Mensagem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DataEnvio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RemetenteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("RemetenteId");
+
+                    b.ToTable("Mensagens");
+                });
 
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
@@ -34,11 +83,9 @@ namespace MotoPack_project.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -48,7 +95,7 @@ namespace MotoPack_project.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UtilizadorId")
+                    b.Property<int>("UtilizadorId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -99,6 +146,7 @@ namespace MotoPack_project.Migrations
 
                     b.Property<string>("Mensagem")
                         .IsRequired()
+                        .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -110,14 +158,58 @@ namespace MotoPack_project.Migrations
                     b.ToTable("Suportes");
                 });
 
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
+                {
+                    b.HasOne("MotoPack_project.Models.Registar", "Destinatario")
+                        .WithMany()
+                        .HasForeignKey("DestinatarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MotoPack_project.Models.Registar", "Remetente")
+                        .WithMany()
+                        .HasForeignKey("RemetenteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destinatario");
+
+                    b.Navigation("Remetente");
+                });
+
+            modelBuilder.Entity("MotoPack_project.Models.Mensagem", b =>
+                {
+                    b.HasOne("MotoPack_project.Models.Chat", "Chat")
+                        .WithMany("Mensagens")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MotoPack_project.Models.Registar", "Remetente")
+                        .WithMany()
+                        .HasForeignKey("RemetenteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Remetente");
+                });
+
             modelBuilder.Entity("MotoPack_project.Models.Produto", b =>
                 {
                     b.HasOne("MotoPack_project.Models.Registar", "Utilizador")
                         .WithMany("Produtos")
                         .HasForeignKey("UtilizadorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Utilizador");
+                });
+
+            modelBuilder.Entity("MotoPack_project.Models.Chat", b =>
+                {
+                    b.Navigation("Mensagens");
                 });
 
             modelBuilder.Entity("MotoPack_project.Models.Registar", b =>

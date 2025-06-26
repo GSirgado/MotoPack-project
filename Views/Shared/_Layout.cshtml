@@ -23,13 +23,9 @@
             </div>
 
             <div class="d-flex align-items-center gap-3">
-<<<<<<< HEAD
-                <a href="@Url.Action("Catalogo","ListaProd")">
-                    <button class="btn btn-light">🛒</button>
-                </a>
-=======
-                <a href="@Url.Action("Catalogo","Produto")" class="btn btn-light">🛒</a>
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
+                <a href="@Url.Action("ConversasRecentes", "Chat")" class="btn btn-light">💬 Chat</a>
+                
+
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
@@ -43,24 +39,19 @@
                 }
                 else
                 {
-                    <a href="@Url.Action("Login","Conta")" class="btn btn-outline-light btn-sm">Login</a>
-                    <a href="@Url.Action("Registar","Conta")">
+                    <a href="@Url.Action("Login", "Conta")" class="btn btn-outline-light btn-sm">Login</a>
+                    <a href="@Url.Action("Registar", "Conta")">
                         <img src="/imagens/perfil_default.png" height="50" />
                     </a>
                 }
             </div>
+
         </div>
 
         <div class="d-flex justify-content-center gap-4 py-1">
-<<<<<<< HEAD
-            <a href="@Url.Action("Catalogo","ListaProd")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
-            <a href="@Url.Action("Categorias","ListaProd")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
-            <a href="@Url.Action("Suporte","Home")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
-=======
             <a href="@Url.Action("Catalogo","Produto")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
             <a href="@Url.Action("Categorias","Produto")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
             <a href="@Url.Action("Suporte","Suporte")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         </div>
     </header>
 

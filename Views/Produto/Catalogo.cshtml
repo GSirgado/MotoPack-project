@@ -90,7 +90,8 @@
     }
 </style>
 
-<a href="@Url.Action("AdicionarProduto", "Home")" class="btn btn-primary mb-3">Adicionar Novo Produto</a>
+<a href="@Url.Action("AdicionarProduto", "Produto")" class="btn btn-primary mb-3">Adicionar Novo Produto</a>
+
 
 <div class="conteudo">
     <div class="filtros">
@@ -99,18 +100,18 @@
         <div class="categorias">
             <p><strong>Categorias</strong></p>
             <ul>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Eletricidade e Iluminação" })">Eletricidade e Iluminação</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Carroçaria" })">Carroçaria</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Travões" })">Travões</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Filtros" })">Filtros</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Suspensão" })">Suspensão</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Motor" })">Motor</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Escapamento" })">Escapamento</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de combustível" })">Sistema de combustível</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de Refrigeração" })">Sistema de Refrigeração</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Sistema de transmissão" })">Sistema de transmissão</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Fluidos ou Químicos" })">Fluidos ou Químicos</a></li>
-                <li><a href="@Url.Action("Catalogo", "Home", new { categoria = "Rodas" })">Rodas</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Eletricidade e Iluminação" })">Eletricidade e Iluminação</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Carroçaria" })">Carroçaria</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Travões" })">Travões</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Filtros" })">Filtros</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Suspensão" })">Suspensão</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Motor" })">Motor</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Escapamento" })">Escapamento</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de combustível" })">Sistema de combustível</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de Refrigeração" })">Sistema de Refrigeração</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de transmissão" })">Sistema de transmissão</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Fluidos ou Químicos" })">Fluidos ou Químicos</a></li>
+                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Rodas" })">Rodas</a></li>
             </ul>
         </div>
 
@@ -128,7 +129,8 @@
             <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
         </form>
 
-        <a href="@Url.Action("Catalogo", "Home")" class="btn btn-sm btn-secondary repor">Repor Filtros</a>
+        <a href="@Url.Action("Catalogo", "Produto")" class="btn btn-sm btn-secondary repor">Repor Filtros</a>
+
     </div>
 
     <div class="produtos">
@@ -146,7 +148,7 @@
             @foreach (var produto in Model)
             {
                 <div class="produto">
-                    <a href="@Url.Action("Produto", "Home", new { id = produto.Id })">
+                    <a href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
                         <img src="@produto.ImageUrl" alt="imagem da peça" />
                         <p><strong>@produto.Nome / @produto.Preco.ToString("0.00") €</strong></p>
                     </a>

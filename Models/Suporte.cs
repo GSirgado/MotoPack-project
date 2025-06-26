@@ -4,26 +4,20 @@ namespace MotoPack_project.Models
 {
     public class Suporte
     {
-<<<<<<< HEAD
-        [Key] // Garante que essa é a chave primária
-=======
         [Key]
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Nome { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "O email é obrigatório.")]
+        [EmailAddress(ErrorMessage = "O email fornecido não é válido.")]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "A mensagem é obrigatória.")]
+        [StringLength(1000, ErrorMessage = "A mensagem não pode exceder 1000 caracteres.")]
         public string Mensagem { get; set; } = string.Empty;
 
         public DateTime DataHora { get; set; } = DateTime.Now;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> de178ab14944c736a2c455ac24c31151131d2a97
