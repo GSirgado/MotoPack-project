@@ -13,15 +13,23 @@
     <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
         <div class="row">
             <div class="col-md-4 text-center">
-                <img src="@Url.Content("~/imagens/default-profile.png")" alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
+                <!-- Mostrar foto de perfil -->
+                <img src="@(!string.IsNullOrEmpty(Model.FotoPerfil) ? Model.FotoPerfil : Url.Content("~/imagens/default-profile.png"))"
+                     alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
+
                 <h5>@Model.Nome</h5>
 
-                <form method="post" enctype="multipart/form-data" class="mb-2">
+                <!-- Form para trocar a foto -->
+                <form asp-action="TrocarFoto" asp-controller="Conta" method="post" enctype="multipart/form-data" class="mb-2">
                     <input type="file" name="NovaFoto" class="form-control" />
                     <button type="submit" class="btn btn-outline-secondary mt-2">Trocar foto</button>
                 </form>
 
-                <form asp-controller="Home" asp-action="Logout" method="post">
+                <!-- Botão para editar perfil -->
+                <a href="@Url.Action("EditarPerfil", "Conta")" class="btn btn-outline-primary mb-2">Editar Perfil</a>
+
+                <!-- Logout -->
+                <form asp-controller="Conta" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
                     <button class="btn btn-danger mt-2">Log out</button>
                 </form>
@@ -39,8 +47,7 @@
                     @foreach (var produto in (List<MotoPack_project.Models.Produto>)ViewBag.Produtos)
                     {
                         <div class="col-md-4 mb-3">
-                            <a class="card h-100" href="@Url.Action("Produto", "Produto", new { id = produto.Id })
-    ">
+                            <a class="card h-100" href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
                                 <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" />
                                 <div class="card-body">
                                     <h5 class="card-title">@produto.Nome</h5>
@@ -51,6 +58,7 @@
                         </div>
                     }
 
+                    <!-- Card para adicionar novo produto -->
                     <div class="col-md-4 mb-3">
                         <div class="card h-100 d-flex align-items-center justify-content-center">
                             <a href="@Url.Action("AdicionarProduto", "Produto")" class="btn btn-outline-dark fs-3">+</a>

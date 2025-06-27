@@ -126,5 +126,106 @@ namespace MotoPack_project.Controllers
 
             return View(user);
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult EditarPerfil()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return RedirectToAction("Login");
+
+            var user = _context.Registars.Find(int.Parse(userId));
+            if (user == null) return RedirectToAction("Login");
+
+            var model = new EditarPerfil
+            {
+                Nome = user.Nome,
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditarPerfil(EditarPerfil model, IFormFile? NovaFoto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return RedirectToAction("Login");
+
+            var user = _context.Registars.Find(int.Parse(userId));
+            if (user == null) return RedirectToAction("Login");
+
+            // Verifica password atual
+            var hasher = new PasswordHasher<Registar>();
+            var verifica = hasher.VerifyHashedPassword(user, user.Pass, model.PasswordAtual);
+            if (verifica != PasswordVerificationResult.Success)
+            {
+                ModelState.AddModelError(string.Empty, "Palavra-passe atual incorreta.");
+                return View(model);
+            }
+
+            // Verifica nova password
+            if (!string.IsNullOrEmpty(model.NovaPass))
+            {
+                if (model.NovaPass != model.ConfNovaPass)
+                {
+                    ModelState.AddModelError(string.Empty, "Nova palavra-passe e confirmação não coincidem.");
+                    return View(model);
+                }
+
+                user.Pass = hasher.HashPassword(user, model.NovaPass);
+            }
+
+            // Atualiza nome/email
+            user.Nome = model.Nome;
+            user.Email = model.Email;
+
+            // Atualiza foto, se houver
+            if (NovaFoto != null && NovaFoto.Length > 0)
+            {
+                var fileName = $"{user.Id}_{Path.GetFileName(NovaFoto.FileName)}";
+                var path = Path.Combine("wwwroot/imagens/perfis", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await NovaFoto.CopyToAsync(stream);
+                }
+
+                user.FotoPerfil = $"/imagens/perfis/{fileName}";
+            }
+
+            _context.Update(user);
+            _context.SaveChanges();
+
+            return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> TrocarFoto(IFormFile NovaFoto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null || NovaFoto == null) return RedirectToAction("Perfil");
+
+            var user = _context.Registars.Find(int.Parse(userId));
+            if (user == null) return RedirectToAction("Perfil");
+
+            var fileName = $"{user.Id}_{Path.GetFileName(NovaFoto.FileName)}";
+            var path = Path.Combine("wwwroot/imagens/perfis", fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await NovaFoto.CopyToAsync(stream);
+            }
+
+            user.FotoPerfil = $"/imagens/perfis/{fileName}";
+            _context.Update(user);
+            _context.SaveChanges();
+
+            return RedirectToAction("Perfil");
+        }
+
     }
 }

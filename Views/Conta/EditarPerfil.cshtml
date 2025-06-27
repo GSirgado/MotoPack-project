@@ -1,0 +1,58 @@
+﻿@model MotoPack_project.Models.EditarPerfil
+
+@{
+    ViewData["Title"] = "Editar Perfil";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="mb-4">Editar Perfil</h2>
+
+            <form asp-action="EditarPerfil" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="Nome" class="form-label">Nome</label>
+                    <input asp-for="Nome" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PasswordAtual" class="form-label">Palavra-passe atual</label>
+                    <input asp-for="PasswordAtual" type="password" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NovaPass" class="form-label">Nova Palavra-passe (opcional)</label>
+                    <input asp-for="NovaPass" type="password" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfNovaPass" class="form-label">Confirmar Nova Palavra-passe</label>
+                    <input asp-for="ConfNovaPass" type="password" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nova Foto de Perfil (opcional)</label>
+                    <input type="file" name="NovaFoto" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                <a href="@Url.Action("Perfil", "Conta")" class="btn btn-secondary">Cancelar</a>
+            </form>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger mt-3">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

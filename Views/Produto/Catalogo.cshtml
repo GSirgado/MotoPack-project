@@ -8,7 +8,9 @@
     var precoMax = ViewBag.PrecoMax ?? 1000;
     var precoAtual = ViewBag.PrecoSelecionado ?? precoMax;
     var categoriaAtual = ViewBag.CategoriaAtual as string ?? "";
+    var termoPesquisa = ViewBag.SearchTerm as string ?? "";
 }
+
 <style>
     .conteudo {
         display: flex;
@@ -92,7 +94,6 @@
 
 <a href="@Url.Action("AdicionarProduto", "Produto")" class="btn btn-primary mb-3">Adicionar Novo Produto</a>
 
-
 <div class="conteudo">
     <div class="filtros">
         <h3><strong>FILTROS</strong></h3>
@@ -100,18 +101,21 @@
         <div class="categorias">
             <p><strong>Categorias</strong></p>
             <ul>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Eletricidade e Iluminação" })">Eletricidade e Iluminação</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Carroçaria" })">Carroçaria</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Travões" })">Travões</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Filtros" })">Filtros</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Suspensão" })">Suspensão</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Motor" })">Motor</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Escapamento" })">Escapamento</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de combustível" })">Sistema de combustível</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de Refrigeração" })">Sistema de Refrigeração</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Sistema de transmissão" })">Sistema de transmissão</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Fluidos ou Químicos" })">Fluidos ou Químicos</a></li>
-                <li><a href="@Url.Action("Catalogo", "Produto", new { categoria = "Rodas" })">Rodas</a></li>
+                @{
+                    var categorias = new[]
+                    {
+                "Eletricidade e Iluminação", "Carroçaria", "Travões", "Filtros", "Suspensão",
+                "Motor", "Escapamento", "Sistema de combustível", "Sistema de Refrigeração",
+                "Sistema de transmissão", "Fluidos ou Químicos", "Rodas"
+                };
+                }
+
+                @foreach (var cat in categorias)
+                {
+                    <li>
+                        <a href="@Url.Action("Catalogo", "Produto", new { categoria = cat, search = termoPesquisa })">@cat</a>
+                    </li>
+                }
             </ul>
         </div>
 
@@ -120,8 +124,12 @@
             {
                 <input type="hidden" name="categoria" value="@categoriaAtual" />
             }
+            @if (!string.IsNullOrEmpty(termoPesquisa))
+            {
+                <input type="hidden" name="search" value="@termoPesquisa" />
+            }
 
-            <<label><strong>Preço até:</strong></label><br />
+            <label><strong>Preço até:</strong></label><br />
             <input type="range" id="priceRange" name="precoMax"
                    min="@precoMin" max="@precoMax" value="@precoAtual" />
             <p class="slider-value">Selecionado: <span id="priceValue">@precoAtual</span>€</p>
@@ -130,13 +138,17 @@
         </form>
 
         <a href="@Url.Action("Catalogo", "Produto")" class="btn btn-sm btn-secondary repor">Repor Filtros</a>
-
     </div>
 
     <div class="produtos">
-        @if (!string.IsNullOrEmpty(ViewBag.CategoriaAtual as string))
+        @if (!string.IsNullOrEmpty(categoriaAtual))
         {
-            <h4>Filtrando por: <em>@ViewBag.CategoriaAtual</em></h4>
+            <h5>Filtrando por categoria: <em>@categoriaAtual</em></h5>
+        }
+
+        @if (!string.IsNullOrEmpty(termoPesquisa))
+        {
+            <h5>Resultados da pesquisa por: <em>"@termoPesquisa"</em></h5>
         }
 
         @if (!Model.Any())

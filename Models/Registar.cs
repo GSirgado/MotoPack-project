@@ -21,7 +21,18 @@ namespace MotoPack_project.Models
         [Compare("Pass", ErrorMessage = "As palavras-passe não coincidem.")]
         public string ConfPass { get; set; } = string.Empty;
 
+
+        [NotMapped]
+        public string? NovaPass { get; set; }
+
+        [NotMapped]
+        [Compare("NovaPass", ErrorMessage = "As passwords não coincidem.")]
+        public string? ConfNovaPass { get; set; }
+
+
         public bool IsAdmin { get; set; } = false;
+
+        public string? FotoPerfil { get; set; } // Caminho da imagem
 
         public List<Produto>? Produtos { get; set; }
     }

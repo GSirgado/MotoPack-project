@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MotoPack_project.Data;
 using MotoPack_project.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpContextAccessor();
+
 
 // Caminho completo para a base de dados
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Database", "MotoPack.db");
@@ -74,15 +78,18 @@ using (var scope = app.Services.CreateScope())
 
     if (!db.Registars.Any(u => u.Email == "admin@gmail.com"))
     {
-        db.Registars.Add(new Registar
+        var passwordHasher = new PasswordHasher<Registar>();
+        var admin = new Registar
         {
             Nome = "Admin",
             Email = "admin@gmail.com",
-            Pass = "admin1234",      // Em ambiente real: usar hash segura
-            ConfPass = "admin1234",
             IsAdmin = true
-        });
+        };
 
+        admin.Pass = passwordHasher.HashPassword(admin, "admin1234");
+        admin.ConfPass = admin.Pass; // Opcional, para manter consistência
+
+        db.Registars.Add(admin);
         db.SaveChanges();
     }
 }

@@ -22,8 +22,7 @@ namespace MotoPack_project.Controllers
             return View();
         }
 
-
-        public IActionResult Catalogo(string categoria, int? precoMax)
+        public IActionResult Catalogo(string categoria, int? precoMax, string search)
         {
             var produtos = _context.Produtos.AsQueryable();
 
@@ -33,10 +32,14 @@ namespace MotoPack_project.Controllers
                 ViewBag.CategoriaAtual = categoria;
             }
 
+            if (!string.IsNullOrEmpty(search))
+            {
+                produtos = produtos.Where(p => p.Nome.Contains(search));
+                ViewBag.SearchTerm = search;
+            }
+
             var precoMin = produtos.Any() ? (int)produtos.Min(p => (double)p.Preco) : 0;
-
             var precoMaximo = produtos.Any() ? (int)produtos.Max(p => (double)p.Preco) : 1000;
-
 
             ViewBag.PrecoMin = precoMin;
             ViewBag.PrecoMax = precoMaximo;
@@ -60,9 +63,8 @@ namespace MotoPack_project.Controllers
         [HttpGet]
         public IActionResult AdicionarProduto()
         {
-            return View(); // Sem especificar o nome, ele procura por AdicionarProduto.cshtml
+            return View();
         }
-
 
         [Authorize]
         [HttpPost]
@@ -99,9 +101,5 @@ namespace MotoPack_project.Controllers
 
             return RedirectToAction("Perfil", "Conta");
         }
-
-
-
-
     }
 }
