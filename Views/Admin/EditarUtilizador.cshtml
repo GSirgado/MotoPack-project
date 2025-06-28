@@ -1,26 +1,30 @@
-﻿@model MotoPack_project.Models.Registar
+﻿@model MotoPack_project.ViewModels.EditarUtilizadorViewModel
 
 @{
     ViewData["Title"] = "Editar Utilizador";
 }
 
-<h2>Editar Utilizador</h2>
+<div class="container my-5">
+    <h2 class="mb-4">Editar Utilizador</h2>
 
-<form asp-action="EditarUtilizador" method="post">
-    <input type="hidden" asp-for="Id" />
+    <form asp-action="EditarUtilizador" method="post">
+        <input type="hidden" asp-for="Id" />
 
-    <div class="mb-3">
-        <label asp-for="Nome" class="form-label">Nome</label>
-        <input asp-for="Nome" class="form-control" />
-        <span asp-validation-for="Nome" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Nome" class="form-label">Nome</label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <div class="flex-grow-1 me-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-    <a asp-action="GerirUtilizadores" class="btn btn-secondary">Cancelar</a>
-</form>
+        <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+        <a asp-action="GerirUtilizadores" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

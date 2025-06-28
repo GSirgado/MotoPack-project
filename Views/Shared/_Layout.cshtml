@@ -31,7 +31,7 @@
 </head>
 <body>
 
-    <header class="bg-dark">
+    <header class="bg-dark mb-1 pb-2">
         <div class="nav text-white py-1 px-3 d-flex justify-content-between align-items-center">
             <div>
                 <a href="@Url.Action("Index","Home")">
@@ -59,27 +59,40 @@
                 else
                 {
                     <a href="@Url.Action("Registar", "Conta")">
-                        <img src="/imagens/perfil_default.png" height="50" />
+                        <img src="/imagens/perfil_add.png" height="50" />
                     </a>
                 }
             </div>
         </div>
 
-        <div class="d-flex justify-content-center gap-4 py-1">
+        <div class="d-flex justify-content-center gap-4 py-2">
             <a href="@Url.Action("Catalogo","Produto")" class="btn btn-outline-secondary rounded-pill">Catálogo</a>
             <a href="@Url.Action("Categorias","Produto")" class="btn btn-outline-secondary rounded-pill">Categorias</a>
             <a href="@Url.Action("Suporte","Suporte")" class="btn btn-outline-secondary rounded-pill">Suporte</a>
         </div>
     </header>
 
-    <main class="container my-4">
+    <main class="bg-dark py-5 text-white">
         @RenderBody()
     </main>
 
-    <footer class="text-white bg-dark p-3 d-flex justify-content-around">
-        <div>Patrocínios e responsáveis</div>
-        <div>|</div>
-        <div>Formas de contato</div>
+    <footer class="text-white bg-dark p-3 d-flex justify-content-around mt-1">
+        <div>
+            <p>Conheça melhor os nossos termos:</p>
+            <a href="@Url.Action("Privacy","Home")" class="btn btn-outline-secondary rounded-pill">Privacy</a>
+        </div>
+
+        <div>
+            Administradores:<br />
+            Guilherme Sirgado<br />
+            João Marques
+        </div>
+
+        <div>
+            Formas de contacto:<br />
+            Email: suporte@motopack.com<br />
+            Telefone: +351 999 999 999
+        </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

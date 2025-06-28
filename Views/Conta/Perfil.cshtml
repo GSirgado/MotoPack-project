@@ -4,12 +4,14 @@
     ViewData["Title"] = "Perfil do Utilizador";
 }
 
-@if (User.HasClaim("IsAdmin", "True"))
+@if (User.IsInRole("Admin"))
 {
     <a href="@Url.Action("GerirUtilizadores", "Admin")" class="btn btn-warning mt-3">Gerir Utilizadores</a>
 }
 
-<div class="container my-5">
+<link rel="stylesheet" href="~/css/Perfil_style.css" />
+
+<div class="container text-dark my-5">
     <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
         <div class="row">
             <div class="col-md-4 text-center">
@@ -47,14 +49,20 @@
                     @foreach (var produto in (List<MotoPack_project.Models.Produto>)ViewBag.Produtos)
                     {
                         <div class="col-md-4 mb-3">
-                            <a class="card h-100" href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
-                                <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" />
+                            <div class="card h-100">
+                                <a href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
+                                    <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" style="height: 200px; object-fit: cover;" />
+                                </a>
                                 <div class="card-body">
                                     <h5 class="card-title">@produto.Nome</h5>
                                     <p class="card-text">@produto.Preco.ToString("0.00") €</p>
                                     <p class="card-text text-muted">@produto.Categoria</p>
+
+                                    <!-- Botão Editar Produto -->
+                                    <a href="@Url.Action("EditarProduto", "Conta", new { id = produto.Id })" class="btn btn-sm btn-outline-primary mt-2">Editar Produto</a>
+
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     }
 

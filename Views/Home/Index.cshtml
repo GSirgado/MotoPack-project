@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<MotoPack_project.Models.Produto>
+
+@{
     ViewBag.Title = "Início";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -7,14 +9,26 @@
 
 <section class="main">
     <section class="main-banner">
-        <a href="" class="btn btn-light px-4 py-2 rounded-pill fw-bold">Saiba mais</a>
+        <div class="banner-conteudo">
+            <a href="@Url.Action("Catalogo","Produto")" class="btn-saiba-mais">Saiba mais</a>
+        </div>
     </section>
 
-    <section class="novidades">
-        <div class="novidade">Novidade</div>
-        <div class="novidade">Novidade</div>
-        <div class="novidade">Novidade</div>
-        <div class="novidade">Novidade</div>
+    <section id="novidades" class="novidades container py-5">
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            @foreach (var produto in Model)
+            {
+                <div class="card novidade text-center p-2" style="width: 14rem; border-radius: 10px;">
+                    <div style="height: 150px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img src="@produto.ImageUrl" class="card-img-top" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="@produto.Nome" />
+                    </div>
+                    <div class="card-body p-2">
+                        <h6 class="card-title mb-1" style="font-size: 0.9rem;">@produto.Nome</h6>
+                        <p class="card-text mb-2" style="font-size: 0.85rem;">@produto.Preco.ToString("0.00") €</p>
+                        <a href="/Produto/Produto/@produto.Id" class="btn btn-success btn-sm">Ver Produto</a>
+                    </div>
+                </div>
+            }
+        </div>
     </section>
 </section>
-

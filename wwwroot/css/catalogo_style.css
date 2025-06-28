@@ -1,51 +1,79 @@
 ﻿.conteudo {
     display: flex;
+    gap: 20px;
 }
+
 
 .filtros {
-    width: 200px;
-    padding: 20px;
-    border-right: 1px solid #ccc;
+    width: 220px;
+    background-color: rgba(245, 245, 245, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    height: fit-content;
 }
-
-    .filtros h3 {
-        margin-top: 0;
-    }
 
 .produtos {
     flex: 1;
-    padding: 20px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
 }
 
 .produto {
-    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
     padding: 10px;
-    text-align: center;
-    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    height: 320px;
 }
 
     .produto img {
         width: 100%;
-        height: 100px;
+        height: 180px;
         object-fit: cover;
-        background-color: #ccc;
+        border-radius: 8px;
     }
 
-.rodape {
-    background-color: #999;
+.descricao {
+    color: black;
+    font-size: 14px;
     text-align: center;
-    padding: 10px;
-    margin-top: 20px;
+    max-height: 3.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
-.categorias ul {
-    list-style-type: none;
-    padding: 0;
+.filtros h3 {
+    margin-bottom: 1rem;
 }
 
-    .categorias ul li {
-        margin-bottom: 5px;
+.filtros a {
+    text-decoration: none;
+    color: inherit;
+}
+
+    .filtros a:hover {
+        text-decoration: underline;
     }
+
+.slider-value {
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.filtros form button {
+    margin-top: 10px;
+}
+
+.filtros .repor {
+    margin-top: 15px;
+    display: block;
+}

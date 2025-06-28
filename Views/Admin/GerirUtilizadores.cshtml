@@ -6,14 +6,36 @@
 
 <h2 class="mb-4">Gerir Utilizadores</h2>
 
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["Sucesso"]</div>
+}
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erro"]</div>
+}
+
 @foreach (var user in Model)
 {
     <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">@user.Nome (@user.Email)</h5>
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">@user.Nome (<small>@user.Email</small>)</h5>
+            </div>
+            <div>
+                <a asp-action="EditarUtilizador" asp-route-id="@user.Id" class="btn btn-sm btn-outline-light">
+                    ✎ Editar Perfil
+                </a>
+                <form asp-action="ApagarUtilizador" asp-route-id="@user.Id" method="post" class="d-inline ms-2">
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Tem a certeza que deseja apagar este utilizador?');">
+                        🗑️ Apagar
+                    </button>
+                </form>
+            </div>
         </div>
         <div class="card-body">
-            @if (user.Produtos != null && user.Produtos.Any())
+            @if (user.Produtos != null && user.Produtos.Count > 0)
             {
                 <table class="table table-bordered table-striped align-middle">
                     <thead class="table-dark">
@@ -30,7 +52,7 @@
                         @foreach (var produto in user.Produtos)
                         {
                             <tr>
-                                <td>
+                                <td style="width:100px;">
                                     @if (!string.IsNullOrEmpty(produto.ImageUrl))
                                     {
                                         <img src="@produto.ImageUrl" alt="Imagem" style="max-width: 100px; max-height: 100px;" />
@@ -45,12 +67,15 @@
                                 <td>@produto.Preco.ToString("C")</td>
                                 <td>@produto.Descricao</td>
                                 <td>
-                                    <a asp-action="EditarProduto" asp-controller="Produto" asp-route-id="@produto.Id" class="btn btn-sm btn-primary me-2">
-                                        Editar
+                                    <a asp-action="EditarProduto" asp-route-id="@produto.Id" asp-controller="Admin"
+                                       class="btn btn-sm btn-primary me-1">
+                                        ✎ Editar Produto
                                     </a>
-                                    <form asp-action="ApagarProduto" asp-controller="Produto" asp-route-id="@produto.Id" method="post" style="display:inline;">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem a certeza que deseja apagar este produto?');">
-                                            Apagar
+                                    <form asp-action="ApagarProduto" asp-controller="Admin" asp-route-id="@produto.Id"
+                                          method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Tem a certeza que deseja apagar este produto?');">
+                                            🗑️ Apagar
                                         </button>
                                     </form>
                                 </td>

@@ -1,0 +1,88 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: rgba(245, 245, 245, 0.5);
+    border-radius: 20px;
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.welcome-section {
+    flex: 1;
+    font-family: Arial, sans-serif;
+}
+
+    .welcome-section h2 {
+        font-weight: bold;
+    }
+
+.divider {
+    width: 1px;
+    background-color: black;
+}
+
+.form-section {
+    flex: 1;
+}
+
+    .form-section form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-section input[type="text"],
+    .form-section input[type="email"],
+    .form-section input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+    }
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+    .form-buttons input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+.submit-btn {
+    background-color: #4CAF50;
+}
+
+.reset-btn {
+    background-color: #f44336;
+}
+
+.login-btn {
+    padding: 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+.background-note {
+    text-align: center;
+    font-style: italic;
+    margin-top: 10px;
+}

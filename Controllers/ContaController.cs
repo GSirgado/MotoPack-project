@@ -79,8 +79,10 @@ namespace MotoPack_project.Controllers
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.Nome),
                         new Claim(ClaimTypes.Email, user.Email),
-                        new Claim("IsAdmin", user.IsAdmin.ToString())
+                        new Claim("IsAdmin", user.IsAdmin.ToString()),
+                        new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // <-- ADICIONA ISTO
                     };
+
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
@@ -226,6 +228,69 @@ namespace MotoPack_project.Controllers
 
             return RedirectToAction("Perfil");
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult EditarProduto(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id && p.UtilizadorId == userId);
+            if (produto == null)
+                return NotFound();
+
+            return View("EditarProdutoUtilizador", produto);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditarProduto(Produto model)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == model.Id && p.UtilizadorId == userId);
+
+            if (produto == null)
+                return Unauthorized();
+
+            if (!ModelState.IsValid)
+                return View("EditarProdutoUtilizador", model);
+
+            produto.Nome = model.Nome;
+            produto.Preco = model.Preco;
+            produto.Categoria = model.Categoria;
+            produto.Descricao = model.Descricao;
+
+            // Atualizar imagem
+            if (model.Imagem != null && model.Imagem.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.Imagem.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Imagem.CopyToAsync(stream);
+                }
+
+                // Apagar imagem anterior
+                if (!string.IsNullOrEmpty(produto.ImageUrl))
+                {
+                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", produto.ImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
+                produto.ImageUrl = "/uploads/" + uniqueFileName;
+            }
+
+            _context.SaveChanges();
+
+            TempData["Sucesso"] = "Produto atualizado com sucesso.";
+            return RedirectToAction("Perfil");
+        }
+
 
     }
 }

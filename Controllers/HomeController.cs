@@ -20,8 +20,19 @@ namespace MotoPack_project.Controllers
 
         public IActionResult Index()
         {
+            var produtosRecentes = _context.Produtos
+                .OrderByDescending(p => p.DataCriacao)
+                .Take(3)
+                .ToList();
+
+            return View(produtosRecentes);
+        }
+
+        public IActionResult Privacy()
+        {
             return View();
         }
+
 
         [HttpGet]
         public IActionResult Suporte()
