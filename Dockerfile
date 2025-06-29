@@ -1,28 +1,27 @@
-# Etapa de build
+# Etapa 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar ficheiros do projeto
+# Copiar solução e projeto
 COPY *.sln .
 COPY MotoPack_project/*.csproj ./MotoPack_project/
 RUN dotnet restore
 
+# Copiar todo o código, compilar e publicar
 COPY . .
 WORKDIR /app/MotoPack_project
 RUN dotnet publish -c Release -o /out
 
-# Etapa final
+# Etapa 2: criar imagem final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
-# Copiar o output da build
+# Copiar binário compilado
 COPY --from=build /out .
 
-# Copiar a base de dados (se for usada no runtime)
-COPY ./Database/MotoPack.db ./Database/MotoPack.db
+# Copiar a base de dados SQLite
+COPY Database/MotoPack.db Database/MotoPack.db
 
-# Expõe a porta usada pela app ASP.NET (pode mudar no Program.cs)
 EXPOSE 80
 
-# Comando de arranque
 ENTRYPOINT ["dotnet", "MotoPack_project.dll"]
