@@ -1,14 +1,15 @@
 ﻿@model MotoPack_project.Models.Produto
 
 @{
-    ViewData["Title"] = "Editar Produto";
+    ViewData["Title"] = "Editar Produto"; // Define o título da página
 }
 
 <div class="container my-5">
     <h2 class="mb-4">Editar Produto</h2>
 
+    <!-- Formulário para editar produto, com envio de ficheiros -->
     <form asp-action="EditarProduto" asp-controller="Admin" method="post" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" /> <!-- Campo oculto com o ID do produto -->
 
         <div class="mb-3">
             <label asp-for="Nome" class="form-label">Nome do Produto</label>
@@ -26,6 +27,7 @@
             <label asp-for="Categoria" class="form-label">Categoria</label>
             <select asp-for="Categoria" class="form-control">
                 <option value="">-- Selecione uma categoria --</option>
+                <!-- Lista de categorias pré-definidas -->
                 <option>Eletricidade e Iluminação</option>
                 <option>Carroçaria</option>
                 <option>Travões</option>
@@ -52,6 +54,7 @@
             <label class="form-label">Imagem Atual</label><br />
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
+                <!-- Mostra imagem atual se existir -->
                 <img src="@Model.ImageUrl" alt="Imagem atual" style="height: 100px;" />
             }
             else
@@ -66,6 +69,7 @@
             <span asp-validation-for="Imagem" class="text-danger"></span>
         </div>
 
+        <!-- Botão para guardar alterações e botão para cancelar -->
         <button type="submit" class="btn btn-primary">Guardar Alterações</button>
         <a asp-action="GerirUtilizadores" class="btn btn-secondary ms-2">Cancelar</a>
     </form>

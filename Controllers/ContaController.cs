@@ -23,6 +23,7 @@ namespace MotoPack_project.Controllers
             _context = context;
         }
 
+        // -------------------- REGISTO --------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Registar()
@@ -34,18 +35,21 @@ namespace MotoPack_project.Controllers
         [AllowAnonymous]
         public IActionResult Registar(Registar model)
         {
+            // Verifica se as palavras-passe coincidem
             if (model.Pass != model.ConfPass)
             {
                 ViewBag.Erro = "As palavras-passe não coincidem.";
                 return View();
             }
 
+            // Verifica se o email já existe
             if (_context.Registars.Any(u => u.Email == model.Email))
             {
                 ViewBag.Erro = "Email já registado.";
                 return View();
             }
 
+            // Hash da palavra-passe antes de guardar
             var passwordHasher = new PasswordHasher<Registar>();
             model.Pass = passwordHasher.HashPassword(model, model.Pass);
 
@@ -55,6 +59,7 @@ namespace MotoPack_project.Controllers
             return RedirectToAction("Login");
         }
 
+        // -------------------- LOGIN --------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
@@ -74,15 +79,15 @@ namespace MotoPack_project.Controllers
 
                 if (result == PasswordVerificationResult.Success)
                 {
+                    // Define as claims para o utilizador autenticado
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.Nome),
                         new Claim(ClaimTypes.Email, user.Email),
                         new Claim("IsAdmin", user.IsAdmin.ToString()),
-                        new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // <-- ADICIONA ISTO
+                        new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
                     };
-
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
@@ -103,6 +108,7 @@ namespace MotoPack_project.Controllers
             return View();
         }
 
+        // -------------------- LOGOUT --------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -111,6 +117,7 @@ namespace MotoPack_project.Controllers
             return RedirectToAction("Login");
         }
 
+        // -------------------- PERFIL DO UTILIZADOR --------------------
         [Authorize]
         public IActionResult Perfil()
         {
@@ -120,15 +127,16 @@ namespace MotoPack_project.Controllers
             var user = _context.Registars.Find(int.Parse(userId));
             if (user == null) return RedirectToAction("Login");
 
+            // Produtos publicados pelo utilizador
             var produtos = _context.Produtos
                 .Where(p => p.UtilizadorId == user.Id)
                 .ToList();
 
             ViewBag.Produtos = produtos;
-
             return View(user);
         }
 
+        // -------------------- EDITAR PERFIL --------------------
         [Authorize]
         [HttpGet]
         public IActionResult EditarPerfil()
@@ -148,7 +156,6 @@ namespace MotoPack_project.Controllers
             return View(model);
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditarPerfil(EditarPerfil model, IFormFile? NovaFoto)
@@ -159,7 +166,7 @@ namespace MotoPack_project.Controllers
             var user = _context.Registars.Find(int.Parse(userId));
             if (user == null) return RedirectToAction("Login");
 
-            // Verifica password atual
+            // Verifica palavra-passe atual
             var hasher = new PasswordHasher<Registar>();
             var verifica = hasher.VerifyHashedPassword(user, user.Pass, model.PasswordAtual);
             if (verifica != PasswordVerificationResult.Success)
@@ -168,7 +175,7 @@ namespace MotoPack_project.Controllers
                 return View(model);
             }
 
-            // Verifica nova password
+            // Atualiza palavra-passe se nova for indicada
             if (!string.IsNullOrEmpty(model.NovaPass))
             {
                 if (model.NovaPass != model.ConfNovaPass)
@@ -180,11 +187,10 @@ namespace MotoPack_project.Controllers
                 user.Pass = hasher.HashPassword(user, model.NovaPass);
             }
 
-            // Atualiza nome/email
             user.Nome = model.Nome;
             user.Email = model.Email;
 
-            // Atualiza foto, se houver
+            // Atualiza foto de perfil
             if (NovaFoto != null && NovaFoto.Length > 0)
             {
                 var fileName = $"{user.Id}_{Path.GetFileName(NovaFoto.FileName)}";
@@ -204,6 +210,7 @@ namespace MotoPack_project.Controllers
             return RedirectToAction("Perfil");
         }
 
+        // -------------------- TROCAR FOTO (separado) --------------------
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> TrocarFoto(IFormFile NovaFoto)
@@ -229,12 +236,14 @@ namespace MotoPack_project.Controllers
             return RedirectToAction("Perfil");
         }
 
+        // -------------------- EDITAR PRODUTO --------------------
         [Authorize]
         [HttpGet]
         public IActionResult EditarProduto(int id)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
+            // Garante que o produto pertence ao utilizador autenticado
             var produto = _context.Produtos.FirstOrDefault(p => p.Id == id && p.UtilizadorId == userId);
             if (produto == null)
                 return NotFound();
@@ -255,12 +264,13 @@ namespace MotoPack_project.Controllers
             if (!ModelState.IsValid)
                 return View("EditarProdutoUtilizador", model);
 
+            // Atualiza dados principais
             produto.Nome = model.Nome;
             produto.Preco = model.Preco;
             produto.Categoria = model.Categoria;
             produto.Descricao = model.Descricao;
 
-            // Atualizar imagem
+            // Atualiza imagem se nova for fornecida
             if (model.Imagem != null && model.Imagem.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
@@ -274,7 +284,7 @@ namespace MotoPack_project.Controllers
                     await model.Imagem.CopyToAsync(stream);
                 }
 
-                // Apagar imagem anterior
+                // Remove imagem anterior se existir
                 if (!string.IsNullOrEmpty(produto.ImageUrl))
                 {
                     var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", produto.ImageUrl.TrimStart('/'));
@@ -291,6 +301,33 @@ namespace MotoPack_project.Controllers
             return RedirectToAction("Perfil");
         }
 
+        // -------------------- APAGAR PRODUTO --------------------
+        [Authorize]
+        [HttpPost]
+        public IActionResult ApagarProduto(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id && p.UtilizadorId == userId);
+            if (produto == null)
+                return Unauthorized();
+
+            // Apaga imagem associada se existir
+            if (!string.IsNullOrEmpty(produto.ImageUrl))
+            {
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", produto.ImageUrl.TrimStart('/'));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
+            _context.Produtos.Remove(produto);
+            _context.SaveChanges();
+
+            TempData["Sucesso"] = "Produto apagado com sucesso.";
+            return RedirectToAction("Perfil");
+        }
 
     }
 }

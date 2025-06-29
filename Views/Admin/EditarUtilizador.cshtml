@@ -1,14 +1,15 @@
 ﻿@model MotoPack_project.ViewModels.EditarUtilizadorViewModel
 
 @{
-    ViewData["Title"] = "Editar Utilizador";
+    ViewData["Title"] = "Editar Utilizador"; // Define o título da página
 }
 
 <div class="container my-5">
     <h2 class="mb-4">Editar Utilizador</h2>
 
+    <!-- Formulário para editar os dados do utilizador -->
     <form asp-action="EditarUtilizador" method="post">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" /> <!-- Campo oculto com o ID do utilizador -->
 
         <div class="mb-3">
             <label asp-for="Nome" class="form-label">Nome</label>
@@ -24,6 +25,7 @@
             </div>
         </div>
 
+        <!-- Botões de ação -->
         <button type="submit" class="btn btn-primary">Guardar Alterações</button>
         <a asp-action="GerirUtilizadores" class="btn btn-secondary ms-2">Cancelar</a>
     </form>

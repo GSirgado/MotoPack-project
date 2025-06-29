@@ -13,11 +13,13 @@ namespace MotoPack_project.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // Injeta o contexto da base de dados
         public HomeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // Página inicial - mostra os 3 produtos mais recentes
         public IActionResult Index()
         {
             var produtosRecentes = _context.Produtos
@@ -28,17 +30,19 @@ namespace MotoPack_project.Controllers
             return View(produtosRecentes);
         }
 
+        // Página de política de privacidade
         public IActionResult Privacy()
         {
             return View();
         }
 
-
+        // Formulário de suporte (GET)
         [HttpGet]
         public IActionResult Suporte()
         {
             var suporte = new Suporte();
 
+            // Se o utilizador estiver autenticado, pré-preenche o nome e email
             if (User.Identity.IsAuthenticated)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -54,10 +58,12 @@ namespace MotoPack_project.Controllers
             return View(suporte);
         }
 
+        // Envia o pedido de suporte (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EnviarPedido(Suporte model)
         {
+            // Verifica se o modelo enviado é válido
             if (!ModelState.IsValid)
             {
                 return View("Suporte", model);
@@ -65,6 +71,7 @@ namespace MotoPack_project.Controllers
 
             try
             {
+                // Define a data/hora atual e guarda o pedido na base de dados
                 model.DataHora = DateTime.Now;
                 _context.Suportes.Add(model);
                 _context.SaveChanges();
@@ -73,13 +80,13 @@ namespace MotoPack_project.Controllers
             }
             catch (Exception ex)
             {
+                // Em caso de erro, mostra mensagem ao utilizador
                 TempData["SuporteSucesso"] = "Ocorreu um erro ao enviar o pedido.";
                 return View("Suporte", model);
             }
 
+            // Redireciona de volta à página de suporte após envio
             return RedirectToAction("Suporte");
         }
-
-        
     }
 }

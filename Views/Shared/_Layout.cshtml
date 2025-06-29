@@ -6,11 +6,11 @@
 @{
     var fotoPerfil = "/imagens/perfil_default.png";
 
+    // Se o utilizador estiver autenticado, tenta obter a imagem de perfil
     if (User.Identity?.IsAuthenticated ?? false)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var dbContext = Context.RequestServices.GetService(typeof(ApplicationDbContext)) as ApplicationDbContext;
-
         var utilizador = dbContext?.Registars.FirstOrDefault(u => u.Id == int.Parse(userId ?? "0"));
 
         if (!string.IsNullOrEmpty(utilizador?.FotoPerfil))
@@ -30,7 +30,6 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-
     <header class="bg-dark mb-1 pb-2">
         <div class="nav text-white py-1 px-3 d-flex justify-content-between align-items-center">
             <div>
@@ -44,7 +43,6 @@
                     <input type="text" name="search" class="form-control w-50" placeholder="Pesquisar produtos..." value="@ViewBag.SearchTerm" />
                     <button type="submit" class="btn btn-light ms-2">🔍</button>
                 </form>
-
             </div>
 
             <div class="d-flex align-items-center gap-3">

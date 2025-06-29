@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Categorias";
 
+    // Lista de categorias disponíveis
     var categorias = new List<string>
     {
         "Eletricidade e Iluminação",
@@ -17,6 +18,7 @@
         "Rodas"
     };
 
+    // Mapeia cada categoria à sua imagem correspondente
     var imagens = new Dictionary<string, string>
     {
         { "Eletricidade e Iluminação", "eletricidade.png" },
@@ -38,17 +40,19 @@
 
 <link rel="stylesheet" href="~/css/categorias_style.css" />
 
-<div class="grid-container">
-    <div class="grid">
+<div class="container my-5">
+    <div class="row g-4">
         @foreach (var categoria in categorias)
         {
-            var imagem = imagens[categoria];
-            <div class="item">
+            var imagem = imagens[categoria]; // Recupera imagem da categoria
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                 <a href="@Url.Action("Catalogo", "Produto", new { categoria = categoria })" class="text-decoration-none text-dark">
-                    <div class="imagem">
-                        <img src="~/img/categorias/@imagem" alt="@categoria" />
+                    <div class="card h-100 shadow-sm">
+                        <img src="@Url.Content($"~/imagens/{imagem}")" alt="@categoria" class="card-img-top img-fluid" style="height: 120px; object-fit: cover;" />
+                        <div class="card-body p-2">
+                            <p class="card-text text-center fw-semibold">@categoria</p>
+                        </div>
                     </div>
-                    <div class="descricao">@categoria</div>
                 </a>
             </div>
         }

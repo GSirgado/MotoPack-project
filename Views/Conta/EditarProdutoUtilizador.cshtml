@@ -6,21 +6,26 @@
 
 <h2>Editar Produto</h2>
 
+<!-- Formulário para editar produto existente -->
 <form asp-action="EditarProduto" method="post" enctype="multipart/form-data">
+    <!-- ID oculto para manter referência ao produto -->
     <input type="hidden" asp-for="Id" />
 
+    <!-- Campo para editar o nome do produto -->
     <div class="mb-3">
         <label asp-for="Nome" class="form-label"></label>
         <input asp-for="Nome" class="form-control" />
         <span asp-validation-for="Nome" class="text-danger"></span>
     </div>
 
+    <!-- Campo para editar o preço -->
     <div class="mb-3">
         <label asp-for="Preco" class="form-label"></label>
         <input asp-for="Preco" type="number" step="0.01" class="form-control" />
         <span asp-validation-for="Preco" class="text-danger"></span>
     </div>
 
+    <!-- Lista de categorias fixas -->
     <div class="mb-3">
         <label asp-for="Categoria" class="form-label"></label>
         <select asp-for="Categoria" class="form-control">
@@ -41,12 +46,14 @@
         <span asp-validation-for="Categoria" class="text-danger"></span>
     </div>
 
+    <!-- Campo para editar descrição do produto -->
     <div class="mb-3">
         <label asp-for="Descricao" class="form-label"></label>
         <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
         <span asp-validation-for="Descricao" class="text-danger"></span>
     </div>
 
+    <!-- Exibição da imagem atual, se existir -->
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
         <div class="mb-3">
@@ -55,12 +62,14 @@
         </div>
     }
 
+    <!-- Upload de nova imagem -->
     <div class="mb-3">
         <label asp-for="Imagem" class="form-label">Nova Imagem</label>
         <input asp-for="Imagem" type="file" class="form-control" />
         <span asp-validation-for="Imagem" class="text-danger"></span>
     </div>
 
+    <!-- Botões de submissão e cancelamento -->
     <button type="submit" class="btn btn-primary">Guardar Alterações</button>
     <a asp-action="Perfil" class="btn btn-secondary">Cancelar</a>
 </form>

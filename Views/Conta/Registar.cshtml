@@ -1,9 +1,12 @@
 ﻿@{
     ViewBag.Title = "Registar";
 }
+
+<!-- Folha de estilo específica para a página de registo -->
 <link rel="stylesheet" href="~/css/Registar_style.css" />
 
 <div class="container">
+    <!-- Mensagem de boas-vindas -->
     <div class="welcome-section">
         <h2>Bem-vindo(a)</h2>
         <p>
@@ -15,24 +18,28 @@
     <div class="divider"></div>
 
     <div class="form-section">
+        <!-- Formulário de registo -->
         <form method="post" asp-controller="Conta" asp-action="Registar">
-            @Html.AntiForgeryToken()
-
+            @Html.AntiForgeryToken() <!-- Proteção contra CSRF -->
+            <!-- Exibe mensagem de erro, se houver -->
             @if (ViewBag.Erro != null)
             {
                 <div style="color:red; font-weight:bold;">@ViewBag.Erro</div>
             }
 
+            <!-- Campos do formulário -->
             <input type="text" name="Nome" placeholder="Nome" required />
             <input type="email" name="Email" placeholder="Email" required />
             <input type="password" name="Pass" placeholder="Pass" required />
             <input type="password" name="ConfPass" placeholder="Confirmação de Pass" required />
 
+            <!-- Botões do formulário -->
             <div class="form-buttons">
                 <input type="submit" class="submit-btn btn-success" value="Submeter" />
                 <input type="reset" class="reset-btn btn-danger" value="Apagar" />
             </div>
 
+            <!-- Redirecionamento para a página de login -->
             <button type="button" class="login-btn" onclick="location.href='@Url.Action("Login", "Conta")'">
                 Já tenho conta!
             </button>

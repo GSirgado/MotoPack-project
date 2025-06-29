@@ -4,6 +4,7 @@
     ViewData["Title"] = "Catálogo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    // Recupera filtros da ViewBag
     var precoMin = ViewBag.PrecoMin ?? 0;
     var precoMax = ViewBag.PrecoMax ?? 1000;
     var precoAtual = ViewBag.PrecoSelecionado ?? precoMax;
@@ -19,6 +20,7 @@
     <div class="filtros">
         <h3><strong>FILTROS</strong></h3>
 
+        <!-- Lista de categorias estática -->
         <div class="categorias">
             <p><strong>Categorias</strong></p>
             <ul>
@@ -40,6 +42,7 @@
             </ul>
         </div>
 
+        <!-- Filtro de preço -->
         <form method="get" asp-action="Catalogo">
             @if (!string.IsNullOrEmpty(categoriaAtual))
             {
@@ -64,7 +67,7 @@
     <div class="produtos">
         @if (!string.IsNullOrEmpty(categoriaAtual))
         {
-            <h5>Filtrando por categoria: <em>@categoriaAtual</em></h5>
+            <h5>Filtrado por categoria: <em>@categoriaAtual</em></h5>
         }
 
         @if (!string.IsNullOrEmpty(termoPesquisa))
@@ -81,7 +84,7 @@
             @foreach (var produto in Model)
             {
                 <div class="produto">
-                    <a class=" text-decoration-none text-dark" href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
+                    <a class="text-decoration-none text-dark" href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
                         <img src="@produto.ImageUrl" alt="imagem da peça" />
                         <p><strong>@produto.Nome / @produto.Preco.ToString("0.00") €</strong></p>
                     </a>
@@ -91,6 +94,7 @@
     </div>
 </div>
 
+<!-- Atualiza valor do range em tempo real -->
 <script>
     const priceSlider = document.getElementById('priceRange');
     const priceValue = document.getElementById('priceValue');

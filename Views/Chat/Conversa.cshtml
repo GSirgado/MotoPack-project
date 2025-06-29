@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Conversa com " + ViewBag.DestinatarioNome;
+
+    // Lista de mensagens trocadas com o destinatário
     var mensagens = ViewBag.Mensagens as List<MotoPack_project.Models.Mensagem>;
+
+    // ID do utilizador autenticado
     var currentUserId = int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier));
 }
 
@@ -11,13 +15,15 @@
 <div>
     @foreach (var msg in mensagens)
     {
+        // Alinha a mensagem à direita se foi enviada pelo utilizador atual
         <div style="@(msg.RemetenteId == currentUserId ? "text-align: right;" : "text-align: left;")">
             <p><strong>@(msg.RemetenteId == currentUserId ? "Você" : ViewBag.DestinatarioNome):</strong> @msg.Texto</p>
-            <small>@msg.DataEnvio.ToString("g")</small>
+            <small>@msg.DataEnvio.ToString("g")</small> <!-- Exibe a data/hora da mensagem -->
         </div>
     }
 </div>
 
+<!-- Formulário para enviar uma nova mensagem -->
 <form asp-action="EnviarMensagem" method="post">
     <input type="hidden" name="destinatarioId" value="@ViewBag.DestinatarioId" />
     <textarea name="texto" required class="form-control" rows="3"></textarea>

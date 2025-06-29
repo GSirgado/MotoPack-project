@@ -4,6 +4,7 @@
     ViewData["Title"] = "Perfil do Utilizador";
 }
 
+<!-- Link de gestão de utilizadores visível apenas para administradores -->
 @if (User.IsInRole("Admin"))
 {
     <a href="@Url.Action("GerirUtilizadores", "Admin")" class="btn btn-warning mt-3">Gerir Utilizadores</a>
@@ -15,22 +16,22 @@
     <div class="p-4 rounded" style="background-color: #e0e0e0; background-image: url('/imagens/fundo-componentes.jpg'); background-size: cover;">
         <div class="row">
             <div class="col-md-4 text-center">
-                <!-- Mostrar foto de perfil -->
+                <!-- Foto de perfil com imagem padrão se não existir -->
                 <img src="@(!string.IsNullOrEmpty(Model.FotoPerfil) ? Model.FotoPerfil : Url.Content("~/imagens/default-profile.png"))"
                      alt="Foto de perfil" class="rounded-circle mb-3" width="120" height="120" />
 
                 <h5>@Model.Nome</h5>
 
-                <!-- Form para trocar a foto -->
+                <!-- Formulário para atualizar a foto de perfil -->
                 <form asp-action="TrocarFoto" asp-controller="Conta" method="post" enctype="multipart/form-data" class="mb-2">
                     <input type="file" name="NovaFoto" class="form-control" />
                     <button type="submit" class="btn btn-outline-secondary mt-2">Trocar foto</button>
                 </form>
 
-                <!-- Botão para editar perfil -->
+                <!-- Acesso à edição do perfil -->
                 <a href="@Url.Action("EditarPerfil", "Conta")" class="btn btn-outline-primary mb-2">Editar Perfil</a>
 
-                <!-- Logout -->
+                <!-- Formulário de logout -->
                 <form asp-controller="Conta" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
                     <button class="btn btn-danger mt-2">Log out</button>
@@ -50,6 +51,7 @@
                     {
                         <div class="col-md-4 mb-3">
                             <div class="card h-100">
+                                <!-- Link para o detalhe do produto -->
                                 <a href="@Url.Action("Produto", "Produto", new { id = produto.Id })">
                                     <img src="@produto.ImageUrl" class="card-img-top" alt="@produto.Nome" style="height: 200px; object-fit: cover;" />
                                 </a>
@@ -58,9 +60,14 @@
                                     <p class="card-text">@produto.Preco.ToString("0.00") €</p>
                                     <p class="card-text text-muted">@produto.Categoria</p>
 
-                                    <!-- Botão Editar Produto -->
+                                    <!-- Botão de edição do produto -->
                                     <a href="@Url.Action("EditarProduto", "Conta", new { id = produto.Id })" class="btn btn-sm btn-outline-primary mt-2">Editar Produto</a>
 
+                                    <!-- Formulário para apagar o produto -->
+                                    <form asp-action="ApagarProduto" asp-controller="Conta" method="post" onsubmit="return confirm('Tem a certeza que deseja apagar este produto?');">
+                                        <input type="hidden" name="id" value="@produto.Id" />
+                                        <button type="submit" class="btn btn-danger">Apagar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

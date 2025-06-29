@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace MotoPack_project.Controllers
 {
-    [Authorize]
+    [Authorize] // Garante que apenas utilizadores autenticados acedem
     public class ChatController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,11 +16,12 @@ namespace MotoPack_project.Controllers
             _context = context;
         }
 
+        // -------------------- LISTA DE CONVERSAS RECENTES --------------------
         public IActionResult ConversasRecentes()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            // Incluir mensagens corretamente (sem o OrderBy dentro do Include)
+            // Recupera todas as conversas onde o utilizador é remetente ou destinatário
             var conversas = _context.Chats
                 .Include(c => c.Mensagens)
                 .Include(c => c.Remetente)
@@ -28,18 +29,20 @@ namespace MotoPack_project.Controllers
                 .Where(c => c.RemetenteId == userId || c.DestinatarioId == userId)
                 .ToList();
 
-            // Ordenar em memória com base na última mensagem (evita erro com LINQ to Entities)
+            // Ordena conversas por data da última mensagem (em memória)
             conversas = conversas
                 .OrderByDescending(c => c.Mensagens.Any() ? c.Mensagens.Max(m => m.DataEnvio) : DateTime.MinValue)
                 .ToList();
 
-            return View("ConversasRecentes", conversas); // Garante que está a ir para a view correta
+            return View("ConversasRecentes", conversas); // Garante que chama a view correta
         }
 
+        // -------------------- VER CONVERSA ENTRE UTILIZADORES --------------------
         public IActionResult Conversa(int destinatarioId)
         {
             var remetenteId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            // Impede que um utilizador converse consigo mesmo
             if (remetenteId == destinatarioId)
                 return RedirectToAction("Index", "Home");
 
@@ -47,17 +50,19 @@ namespace MotoPack_project.Controllers
             if (destinatario == null)
                 return NotFound();
 
-            // Recuperar chat existente (qualquer direção)
+            // Procura chat existente entre os dois utilizadores
             var chat = _context.Chats
                 .Include(c => c.Mensagens)
                 .FirstOrDefault(c =>
                     (c.RemetenteId == remetenteId && c.DestinatarioId == destinatarioId) ||
                     (c.RemetenteId == destinatarioId && c.DestinatarioId == remetenteId));
 
+            // Ordena mensagens da conversa (ou cria lista vazia se não houver)
             var mensagens = chat?.Mensagens
                 .OrderBy(m => m.DataEnvio)
                 .ToList() ?? new List<Models.Mensagem>();
 
+            // Passa informações para a view
             ViewBag.DestinatarioId = destinatarioId;
             ViewBag.DestinatarioNome = destinatario.Nome;
             ViewBag.Mensagens = mensagens;
@@ -65,15 +70,18 @@ namespace MotoPack_project.Controllers
             return View();
         }
 
+        // -------------------- ENVIAR MENSAGEM --------------------
         [HttpPost]
         public IActionResult EnviarMensagem(int destinatarioId, string texto)
         {
             var remetenteId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            // Verifica se já existe um chat entre os utilizadores
             var chat = _context.Chats.FirstOrDefault(c =>
                 (c.RemetenteId == remetenteId && c.DestinatarioId == destinatarioId) ||
                 (c.RemetenteId == destinatarioId && c.DestinatarioId == remetenteId));
 
+            // Cria novo chat se ainda não existir
             if (chat == null)
             {
                 chat = new Models.Chat
@@ -85,6 +93,7 @@ namespace MotoPack_project.Controllers
                 _context.SaveChanges();
             }
 
+            // Cria e guarda a nova mensagem
             var mensagem = new Models.Mensagem
             {
                 ChatId = chat.Id,
@@ -96,6 +105,7 @@ namespace MotoPack_project.Controllers
             _context.Mensagens.Add(mensagem);
             _context.SaveChanges();
 
+            // Redireciona para a conversa atualizada
             return RedirectToAction("Conversa", new { destinatarioId });
         }
     }

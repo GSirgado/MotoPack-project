@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Produto";
+
+    // Obtém o ID do utilizador autenticado (ou -1 se não estiver autenticado)
     var userId = User.Identity.IsAuthenticated
         ? int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))
         : -1;
@@ -13,12 +15,14 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="p-4 bg-light rounded mb-3">
+            <!-- Descrição do produto -->
+            <div class="p-4 rounded" style="background-color: #ffffff; color: #212529; opacity: 1;">
                 <h5><strong>Descrição do produto</strong></h5>
                 <p>@Model.Descricao</p>
             </div>
 
-            <div class="p-4 bg-light rounded">
+            <!-- Informações adicionais -->
+            <div class="p-4 rounded" style="background-color: #ffffff; color: #212529; opacity: 1; margin-top: 20px;">
                 <p><strong>Categoria:</strong> @Model.Categoria</p>
                 <p><strong>Data de publicação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
                 <p><strong>Postado por:</strong> @Model.Utilizador?.Nome</p>
@@ -26,6 +30,7 @@
         </div>
 
         <div class="col-md-6 text-center">
+            <!-- Imagem do produto -->
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
                 <img src="@Model.ImageUrl" style="max-height:250px; margin:5px;" class="img-fluid rounded" />
@@ -35,6 +40,7 @@
                 <p><em>Sem imagem disponível</em></p>
             }
 
+            <!-- Botão para iniciar conversa, se o utilizador estiver autenticado e não for o dono do produto -->
             @if (User.Identity.IsAuthenticated && Model.UtilizadorId != userId)
             {
                 <div class="mt-3">
@@ -45,7 +51,6 @@
                        asp-route-destinatarioNome="@Model.Utilizador?.Nome">
                         Enviar mensagem para @Model.Utilizador?.Nome
                     </a>
-
                 </div>
             }
         </div>

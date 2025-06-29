@@ -8,7 +8,7 @@ using MotoPack_project.ViewModels;
 
 namespace MotoPack_project.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] // Garante que só administradores podem aceder
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,8 +18,10 @@ namespace MotoPack_project.Controllers
             _context = context;
         }
 
+        // -------------------- LISTAR UTILIZADORES --------------------
         public IActionResult GerirUtilizadores()
         {
+            // Carrega utilizadores com seus produtos
             var utilizadores = _context.Registars
                 .Include(u => u.Produtos)
                 .ToList();
@@ -30,10 +32,12 @@ namespace MotoPack_project.Controllers
         [HttpGet]
         public IActionResult EditarUtilizador(int id)
         {
+            // Busca utilizador pelo ID
             var utilizador = _context.Registars.Find(id);
             if (utilizador == null)
                 return NotFound();
 
+            // Preenche ViewModel para edição
             var model = new EditarUtilizadorViewModel
             {
                 Id = utilizador.Id,
@@ -54,6 +58,7 @@ namespace MotoPack_project.Controllers
             if (utilizador == null)
                 return NotFound();
 
+            // Atualiza dados
             utilizador.Nome = model.Nome;
             utilizador.Email = model.Email;
 
@@ -83,11 +88,13 @@ namespace MotoPack_project.Controllers
             if (produto == null)
                 return NotFound();
 
+            // Atualiza dados principais
             produto.Nome = model.Nome;
             produto.Preco = model.Preco;
             produto.Categoria = model.Categoria;
             produto.Descricao = model.Descricao;
 
+            // Se nova imagem for enviada
             if (model.Imagem != null && model.Imagem.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
@@ -96,11 +103,13 @@ namespace MotoPack_project.Controllers
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.Imagem.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
+                // Guarda a nova imagem
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     model.Imagem.CopyTo(stream);
                 }
 
+                // Apaga imagem antiga (se existir)
                 if (!string.IsNullOrEmpty(produto.ImageUrl))
                 {
                     var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", produto.ImageUrl.TrimStart('/'));
@@ -134,6 +143,7 @@ namespace MotoPack_project.Controllers
         // -------------------- APAGAR UTILIZADOR --------------------
         public IActionResult ApagarUtilizador(int id)
         {
+            // Impede apagar a própria conta admin
             if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var atualId))
                 return Unauthorized();
 
@@ -143,6 +153,7 @@ namespace MotoPack_project.Controllers
                 return RedirectToAction("GerirUtilizadores");
             }
 
+            // Busca utilizador com os produtos
             var utilizador = _context.Registars
                 .Include(u => u.Produtos)
                 .FirstOrDefault(u => u.Id == id);
@@ -150,6 +161,7 @@ namespace MotoPack_project.Controllers
             if (utilizador == null)
                 return NotFound();
 
+            // Remove produtos e depois o utilizador
             _context.Produtos.RemoveRange(utilizador.Produtos ?? new List<Produto>());
             _context.Registars.Remove(utilizador);
             _context.SaveChanges();
