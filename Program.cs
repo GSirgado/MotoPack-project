@@ -4,18 +4,23 @@ using Microsoft.EntityFrameworkCore;
 using MotoPack_project.Data;
 using MotoPack_project.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpContextAccessor();
+// --------------------------------------------
+// Serviços
+// --------------------------------------------
 
+builder.Services.AddHttpContextAccessor();
 
 // Caminho completo para a base de dados
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Database", "MotoPack.db");
 
-// Serviços MVC e Razor Pages
-builder.Services.AddControllersWithViews();
+// Serviços MVC, Razor Pages e API Controllers
+builder.Services.AddControllersWithViews();  // MVC + Razor
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();           // API JSON
 
 // Configuração da base de dados SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -47,9 +52,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// --------------------------------------------
+// Construir o app
+// --------------------------------------------
 var app = builder.Build();
 
+// --------------------------------------------
 // Middleware
+// --------------------------------------------
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -58,19 +71,49 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseCookiePolicy();
 app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Rotas
+// PROTEÇÃO DO SWAGGER UI SÓ PARA ADMIN
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/swagger"), appBuilder =>
+{
+    appBuilder.Use(async (ctx, next) =>
+    {
+        if (!ctx.User.Identity?.IsAuthenticated ?? true)
+        {
+            ctx.Response.StatusCode = 401; // Unauthorized
+            return;
+        }
+
+        if (!ctx.User.IsInRole("Admin"))
+        {
+            ctx.Response.StatusCode = 403; // Forbidden
+            return;
+        }
+
+        await next();
+    });
+
+    appBuilder.UseSwagger();
+    appBuilder.UseSwaggerUI();
+});
+
+// ROTAS
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Criar a base de dados e um utilizador admin por defeito
+app.MapControllers(); // Ativa endpoints API JSON
+
+// --------------------------------------------
+// Criar base de dados e admin por defeito
+// --------------------------------------------
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -87,11 +130,14 @@ using (var scope = app.Services.CreateScope())
         };
 
         admin.Pass = passwordHasher.HashPassword(admin, "admin1234");
-        admin.ConfPass = admin.Pass; // Opcional, para manter consistência
+        admin.ConfPass = admin.Pass;
 
         db.Registars.Add(admin);
         db.SaveChanges();
     }
 }
 
+// --------------------------------------------
+// Iniciar o app
+// --------------------------------------------
 app.Run();
