@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MotoPack_project.Models
 {
@@ -34,6 +35,7 @@ namespace MotoPack_project.Models
 
         public string? FotoPerfil { get; set; } // Caminho da imagem
 
+        [JsonIgnore]
         public List<Produto>? Produtos { get; set; }
     }
 }
