@@ -17,5 +17,8 @@ namespace MotoPack_project.Models
 
         public int RemetenteId { get; set; }
         public Registar Remetente { get; set; }
+
+        public bool Lida { get; set; } = false; // <- novo campo
     }
+
 }

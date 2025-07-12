@@ -46,7 +46,13 @@
             </div>
 
             <div class="d-flex align-items-center gap-3">
-                <a href="@Url.Action("ConversasRecentes", "Chat")" class="btn btn-light">💬 Chat</a>
+                <a href="@Url.Action("ConversasRecentes", "Chat")" class="btn btn-light position-relative">
+                    💬 Chat
+                    <span id="notificacao" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                        0
+                    </span>
+                </a>
+
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
@@ -92,6 +98,31 @@
             Telefone: +351 999 999 999
         </div>
     </footer>
+
+    <script>
+        async function atualizarNotificacoes() {
+            try {
+                const resposta = await fetch("/Chat/ContarNaoLidas");
+                const resultado = await resposta.json();
+                const badge = document.getElementById("notificacao");
+
+                if (resultado.naoLidas > 0) {
+                    badge.innerText = resultado.naoLidas;
+                    badge.style.display = "inline";
+                } else {
+                    badge.style.display = "none";
+                }
+            } catch (err) {
+                console.error("Erro ao buscar notificações:", err);
+            }
+        }
+
+        // Atualiza ao carregar a página e de x em x segundos (ex: 10s)
+        atualizarNotificacoes();
+        setInterval(atualizarNotificacoes, 10000);
+    </script>
+
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MotoPack_project.Data;
+using MotoPack_project.Models;
 using System.Security.Claims;
 
 namespace MotoPack_project.Controllers
@@ -42,7 +43,6 @@ namespace MotoPack_project.Controllers
         {
             var remetenteId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            // Impede que um utilizador converse consigo mesmo
             if (remetenteId == destinatarioId)
                 return RedirectToAction("Index", "Home");
 
@@ -50,25 +50,39 @@ namespace MotoPack_project.Controllers
             if (destinatario == null)
                 return NotFound();
 
-            // Procura chat existente entre os dois utilizadores
             var chat = _context.Chats
                 .Include(c => c.Mensagens)
                 .FirstOrDefault(c =>
                     (c.RemetenteId == remetenteId && c.DestinatarioId == destinatarioId) ||
                     (c.RemetenteId == destinatarioId && c.DestinatarioId == remetenteId));
 
-            // Ordena mensagens da conversa (ou cria lista vazia se não houver)
             var mensagens = chat?.Mensagens
                 .OrderBy(m => m.DataEnvio)
                 .ToList() ?? new List<Models.Mensagem>();
 
-            // Passa informações para a view
+            // ✅ MARCAR COMO LIDAS (só mensagens recebidas pelo utilizador atual)
+            var mensagensPorLer = mensagens
+                .Where(m => m.RemetenteId == destinatarioId && !m.Lida)
+                .ToList();
+
+            foreach (var msg in mensagensPorLer)
+            {
+                msg.Lida = true;
+            }
+
+            if (mensagensPorLer.Count > 0)
+            {
+                _context.SaveChanges();
+            }
+
+            // Passar info para a View
             ViewBag.DestinatarioId = destinatarioId;
             ViewBag.DestinatarioNome = destinatario.Nome;
             ViewBag.Mensagens = mensagens;
 
             return View();
         }
+
 
         // -------------------- ENVIAR MENSAGEM --------------------
         [HttpPost]
@@ -108,5 +122,26 @@ namespace MotoPack_project.Controllers
             // Redireciona para a conversa atualizada
             return RedirectToAction("Conversa", new { destinatarioId });
         }
+        [HttpGet]
+        [HttpGet]
+        public JsonResult ContarNaoLidas()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            // Buscar todas as mensagens não lidas recebidas pelo utilizador
+            var mensagensPorLer = _context.Mensagens
+                .Include(m => m.Chat)
+                .Where(m =>
+                    m.RemetenteId != userId &&
+                    ((m.Chat.RemetenteId == userId) || (m.Chat.DestinatarioId == userId)) &&
+                    !m.Lida)
+                .ToList();
+
+            int naoLidas = mensagensPorLer.Count;
+
+            return Json(new { naoLidas });
+        }
+
+
     }
 }

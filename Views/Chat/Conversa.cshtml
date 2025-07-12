@@ -21,6 +21,12 @@
             <small>@msg.DataEnvio.ToString("g")</small> <!-- Exibe a data/hora da mensagem -->
         </div>
     }
+
+    // Marcar mensagens como lidas
+    @foreach (var msg in mensagens.Where(m => m.RemetenteId != currentUserId && !m.Lida))
+    {
+    msg.Lida = true;
+    }
 </div>
 
 <!-- Formulário para enviar uma nova mensagem -->
